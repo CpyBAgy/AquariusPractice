@@ -1,0 +1,59 @@
+2025-05-07 08:51:20,270 - INFO - *** Инициализация логирования для basic_approach.py ***
+2025-05-07 08:51:20,270 - INFO - Лог-файл будет создан по пути: logs/basic_test.log
+2025-05-07 08:51:20,272 - INFO - === Начало теста успешного поиска ===
+2025-05-07 08:51:21,329 - INFO - Открываю страницу https://duckduckgo.com/
+2025-05-07 08:51:24,114 - INFO - Страница https://duckduckgo.com/ загружена
+2025-05-07 08:51:24,114 - INFO - Выполняю поиск: Python selenium testing
+2025-05-07 08:51:24,115 - INFO - Ищу элемент: ('id', 'searchbox_input')
+2025-05-07 08:51:24,242 - INFO - Ищу кнопку поиска: ('css selector', "button[aria-label='Search']")
+2025-05-07 08:51:24,578 - INFO - Жду загрузки результатов
+2025-05-07 08:51:28,679 - INFO - Результаты поиска загружены
+2025-05-07 08:51:30,685 - INFO - Ищу результаты поиска: ('css selector', 'h2')
+2025-05-07 08:51:31,705 - INFO - Найдено результатов: 10
+2025-05-07 08:51:31,705 - INFO - Проверяю наличие результата с текстом: Python
+2025-05-07 08:51:31,715 - INFO - Найден результат с текстом: Python
+2025-05-07 08:51:31,715 - INFO - ✓ Тест успешного поиска прошел
+2025-05-07 08:51:31,827 - INFO - === Конец теста успешного поиска ===
+2025-05-07 08:51:31,829 - INFO - === Начало теста с ошибкой при поиске элемента ===
+2025-05-07 08:51:32,300 - INFO - Открываю страницу https://duckduckgo.com/
+2025-05-07 08:51:34,498 - INFO - Страница https://duckduckgo.com/ загружена
+2025-05-07 08:51:34,498 - INFO - Пытаюсь найти несуществующий элемент: ('id', 'this-element-does-not-exist')
+2025-05-07 08:51:37,588 - ERROR - Ошибка при поиске элемента: Message: 
+Stacktrace:
+0   chromedriver                        0x00000001012aaa54 cxxbridge1$str$ptr + 2803960
+1   chromedriver                        0x00000001012a2cf0 cxxbridge1$str$ptr + 2771860
+2   chromedriver                        0x0000000100dee864 cxxbridge1$string$len + 93028
+3   chromedriver                        0x0000000100e35410 cxxbridge1$string$len + 382736
+4   chromedriver                        0x0000000100e76480 cxxbridge1$string$len + 649088
+5   chromedriver                        0x0000000100e297ec cxxbridge1$string$len + 334572
+6   chromedriver                        0x000000010126fccc cxxbridge1$str$ptr + 2562928
+7   chromedriver                        0x0000000101272f98 cxxbridge1$str$ptr + 2575932
+8   chromedriver                        0x00000001012502c4 cxxbridge1$str$ptr + 2433384
+9   chromedriver                        0x0000000101273810 cxxbridge1$str$ptr + 2578100
+10  chromedriver                        0x00000001012412f0 cxxbridge1$str$ptr + 2371988
+11  chromedriver                        0x000000010129357c cxxbridge1$str$ptr + 2708512
+12  chromedriver                        0x0000000101293708 cxxbridge1$str$ptr + 2708908
+13  chromedriver                        0x00000001012a293c cxxbridge1$str$ptr + 2770912
+14  libsystem_pthread.dylib             0x000000019aaeec0c _pthread_start + 136
+15  libsystem_pthread.dylib             0x000000019aae9b80 thread_start + 8
+
+2025-05-07 08:51:37,588 - INFO - ✓ Тест ожидаемо провалился: Message: 
+Stacktrace:
+0   chromedriver                        0x00000001012aaa54 cxxbridge1$str$ptr + 2803960
+1   chromedriver                        0x00000001012a2cf0 cxxbridge1$str$ptr + 2771860
+2   chromedriver                        0x0000000100dee864 cxxbridge1$string$len + 93028
+3   chromedriver                        0x0000000100e35410 cxxbridge1$string$len + 382736
+4   chromedriver                        0x0000000100e76480 cxxbridge1$string$len + 649088
+5   chromedriver                        0x0000000100e297ec cxxbridge1$string$len + 334572
+6   chromedriver                        0x000000010126fccc cxxbridge1$str$ptr + 2562928
+7   chromedriver                        0x0000000101272f98 cxxbridge1$str$ptr + 2575932
+8   chromedriver                        0x00000001012502c4 cxxbridge1$str$ptr + 2433384
+9   chromedriver                        0x0000000101273810 cxxbridge1$str$ptr + 2578100
+10  chromedriver                        0x00000001012412f0 cxxbridge1$str$ptr + 2371988
+11  chromedriver                        0x000000010129357c cxxbridge1$str$ptr + 2708512
+12  chromedriver                        0x0000000101293708 cxxbridge1$str$ptr + 2708908
+13  chromedriver                        0x00000001012a293c cxxbridge1$str$ptr + 2770912
+14  libsystem_pthread.dylib             0x000000019aaeec0c _pthread_start + 136
+15  libsystem_pthread.dylib             0x000000019aae9b80 thread_start + 8
+
+2025-05-07 08:51:37,670 - INFO - === Конец теста с ошибкой при поиске элемента ===

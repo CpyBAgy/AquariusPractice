@@ -1,0 +1,19 @@
+2025-05-07 08:48:22,858 - INFO - *** Инициализация логирования для auto_logging_approach.py ***
+2025-05-07 08:48:22,858 - INFO - Лог-файл будет создан по пути: logs/auto_logging_test.log
+2025-05-07 08:48:22,860 - INFO - === Начало теста успешного поиска ===
+2025-05-07 08:48:23,364 - INFO - ➡️  SearchPage.open
+2025-05-07 08:48:25,435 - INFO - ✅ SearchPage.open - успешно
+2025-05-07 08:48:25,435 - INFO - ➡️  SearchPage.search с query='Python selenium test...'
+2025-05-07 08:48:25,436 - INFO - ➡️  SearchPage.type с поле ввода поискового запроса, text='Python selenium test...', timeout=10
+2025-05-07 08:48:25,436 - INFO - ➡️  SearchPage.find с поле ввода поискового запроса, timeout=10
+2025-05-07 08:48:25,442 - INFO - ✅ SearchPage.find с поле ввода поискового запроса, timeout=10 - успешно
+2025-05-07 08:48:25,558 - INFO - ✅ SearchPage.type с поле ввода поискового запроса, text='Python selenium test...', timeout=10 - успешно
+2025-05-07 08:48:25,558 - INFO - ➡️  SearchPage.click с кнопка поиска, timeout=10
+2025-05-07 08:48:25,603 - INFO - ✅ SearchPage.click с кнопка поиска, timeout=10 - успешно
+2025-05-07 08:48:28,608 - INFO - ✅ SearchPage.search с query='Python selenium test...' - успешно
+2025-05-07 08:48:30,615 - INFO - ➡️  SearchPage.get_results_count
+2025-05-07 08:48:31,641 - INFO - ✅ SearchPage.get_results_count - успешно
+2025-05-07 08:48:31,641 - INFO - ➡️  SearchPage.has_result_containing с text=Python
+2025-05-07 08:48:31,658 - INFO - ✅ SearchPage.has_result_containing с text=Python - успешно
+2025-05-07 08:48:31,658 - INFO - ✓ Тест успешного поиска прошел
+2025-05-07 08:48:31,763 - INFO - === Конец теста успешного поиска ===

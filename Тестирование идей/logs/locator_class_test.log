@@ -1,0 +1,41 @@
+2025-05-07 08:56:06,227 - INFO - *** Инициализация логирования для locator_class_approach.py ***
+2025-05-07 08:56:06,227 - INFO - Лог-файл будет создан по пути: logs/locator_class_test.log
+2025-05-07 08:56:06,229 - INFO - === Начало теста успешного поиска ===
+2025-05-07 08:56:06,718 - INFO - Открываю страницу https://duckduckgo.com/
+2025-05-07 08:56:08,970 - INFO - Страница https://duckduckgo.com/ загружена
+2025-05-07 08:56:08,970 - INFO - Выполняю поиск: Python selenium testing
+2025-05-07 08:56:08,970 - INFO - Ищу поле ввода поискового запроса
+2025-05-07 08:56:09,091 - INFO - Ищу кнопка поиска
+2025-05-07 08:56:09,399 - INFO - Жду загрузки результатов
+2025-05-07 08:56:12,026 - INFO - Результаты поиска загружены
+2025-05-07 08:56:14,032 - INFO - Ищу заголовок результата поиска
+2025-05-07 08:56:15,052 - INFO - Найдено результатов: 10
+2025-05-07 08:56:15,054 - INFO - Проверяю наличие результата с текстом: Python
+2025-05-07 08:56:15,072 - INFO - Найден результат с текстом: Python
+2025-05-07 08:56:15,072 - INFO - ✓ Тест успешного поиска прошел
+2025-05-07 08:56:15,157 - INFO - === Конец теста успешного поиска ===
+2025-05-07 08:56:15,160 - INFO - === Начало теста с ошибкой при поиске элемента ===
+2025-05-07 08:56:15,617 - INFO - Открываю страницу https://duckduckgo.com/
+2025-05-07 08:56:17,928 - INFO - Страница https://duckduckgo.com/ загружена
+2025-05-07 08:56:17,929 - INFO - Пытаюсь найти несуществующий элемент
+2025-05-07 08:56:21,007 - ERROR - Ошибка при поиске элемента: Не удалось найти несуществующий элемент
+2025-05-07 08:56:21,008 - INFO - ✓ Тест ожидаемо провалился: Message: 
+Stacktrace:
+0   chromedriver                        0x0000000104b4aa54 cxxbridge1$str$ptr + 2803960
+1   chromedriver                        0x0000000104b42cf0 cxxbridge1$str$ptr + 2771860
+2   chromedriver                        0x000000010468e864 cxxbridge1$string$len + 93028
+3   chromedriver                        0x00000001046d5410 cxxbridge1$string$len + 382736
+4   chromedriver                        0x0000000104716480 cxxbridge1$string$len + 649088
+5   chromedriver                        0x00000001046c97ec cxxbridge1$string$len + 334572
+6   chromedriver                        0x0000000104b0fccc cxxbridge1$str$ptr + 2562928
+7   chromedriver                        0x0000000104b12f98 cxxbridge1$str$ptr + 2575932
+8   chromedriver                        0x0000000104af02c4 cxxbridge1$str$ptr + 2433384
+9   chromedriver                        0x0000000104b13810 cxxbridge1$str$ptr + 2578100
+10  chromedriver                        0x0000000104ae12f0 cxxbridge1$str$ptr + 2371988
+11  chromedriver                        0x0000000104b3357c cxxbridge1$str$ptr + 2708512
+12  chromedriver                        0x0000000104b33708 cxxbridge1$str$ptr + 2708908
+13  chromedriver                        0x0000000104b4293c cxxbridge1$str$ptr + 2770912
+14  libsystem_pthread.dylib             0x000000019aaeec0c _pthread_start + 136
+15  libsystem_pthread.dylib             0x000000019aae9b80 thread_start + 8
+
+2025-05-07 08:56:21,086 - INFO - === Конец теста с ошибкой при поиске элемента ===

@@ -1,0 +1,45 @@
+2025-05-07 08:47:47,098 - INFO - *** Инициализация логирования для auto_description_approach.py ***
+2025-05-07 08:47:47,098 - INFO - Лог-файл будет создан по пути: logs/auto_description_test.log
+2025-05-07 08:47:47,101 - INFO - === Начало теста успешного поиска ===
+2025-05-07 08:47:48,347 - INFO - Открываю страницу https://duckduckgo.com/
+2025-05-07 08:47:50,651 - INFO - Страница https://duckduckgo.com/ загружена
+2025-05-07 08:47:50,651 - INFO - Выполняю поиск: Python selenium testing
+2025-05-07 08:47:50,651 - INFO - Ищу поле поиска (id: searchbox_input)
+2025-05-07 08:47:50,788 - INFO - Ввел поисковый запрос: Python selenium testing
+2025-05-07 08:47:50,789 - INFO - Ищу поле поиска (css selector: button[aria-label='Search'])
+2025-05-07 08:47:54,857 - INFO - Нажал кнопку поиска
+2025-05-07 08:47:54,858 - INFO - Жду загрузки результатов
+2025-05-07 08:47:56,878 - INFO - Результаты поиска загружены
+2025-05-07 08:47:58,884 - INFO - Ищу элемент (CSS: h2)
+2025-05-07 08:47:59,904 - INFO - Найдено результатов: 10
+2025-05-07 08:47:59,904 - INFO - Количество результатов: 10
+2025-05-07 08:47:59,904 - INFO - Проверяю наличие результата с текстом: Python
+2025-05-07 08:47:59,915 - INFO - Найден результат с текстом: Python
+2025-05-07 08:47:59,916 - INFO - Наличие результата с 'Python': True
+2025-05-07 08:47:59,916 - INFO - ✓ Тест успешного поиска прошел
+2025-05-07 08:48:00,010 - INFO - === Конец теста успешного поиска ===
+2025-05-07 08:48:00,012 - INFO - === Начало теста с ошибкой при поиске элемента ===
+2025-05-07 08:48:00,484 - INFO - Открываю страницу https://duckduckgo.com/
+2025-05-07 08:48:02,612 - INFO - Страница https://duckduckgo.com/ загружена
+2025-05-07 08:48:02,612 - INFO - Пытаюсь найти элемент (ID: this-element-does-not-exist)
+2025-05-07 08:48:05,696 - ERROR - Ошибка при поиске элемента: Не удалось найти элемент (ID: this-element-does-not-exist)
+2025-05-07 08:48:05,696 - INFO - ✓ Тест ожидаемо провалился: Message: 
+Stacktrace:
+0   chromedriver                        0x000000010060ea54 cxxbridge1$str$ptr + 2803960
+1   chromedriver                        0x0000000100606cf0 cxxbridge1$str$ptr + 2771860
+2   chromedriver                        0x0000000100152864 cxxbridge1$string$len + 93028
+3   chromedriver                        0x0000000100199410 cxxbridge1$string$len + 382736
+4   chromedriver                        0x00000001001da480 cxxbridge1$string$len + 649088
+5   chromedriver                        0x000000010018d7ec cxxbridge1$string$len + 334572
+6   chromedriver                        0x00000001005d3ccc cxxbridge1$str$ptr + 2562928
+7   chromedriver                        0x00000001005d6f98 cxxbridge1$str$ptr + 2575932
+8   chromedriver                        0x00000001005b42c4 cxxbridge1$str$ptr + 2433384
+9   chromedriver                        0x00000001005d7810 cxxbridge1$str$ptr + 2578100
+10  chromedriver                        0x00000001005a52f0 cxxbridge1$str$ptr + 2371988
+11  chromedriver                        0x00000001005f757c cxxbridge1$str$ptr + 2708512
+12  chromedriver                        0x00000001005f7708 cxxbridge1$str$ptr + 2708908
+13  chromedriver                        0x000000010060693c cxxbridge1$str$ptr + 2770912
+14  libsystem_pthread.dylib             0x000000019aaeec0c _pthread_start + 136
+15  libsystem_pthread.dylib             0x000000019aae9b80 thread_start + 8
+
+2025-05-07 08:48:05,779 - INFO - === Конец теста с ошибкой при поиске элемента ===
