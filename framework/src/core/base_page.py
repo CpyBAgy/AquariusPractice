@@ -92,11 +92,11 @@ class BasePage:
             raise Exception(f"Ошибка при клике: {e}")
 
     @auto_log
-    def type(self, locator_or_element, text, timeout=10):
+    def type(self, locator_or_element, text):
         """Ввод текста в элемент"""
         try:
             if isinstance(locator_or_element, tuple) or isinstance(locator_or_element, Locator):
-                element = self.find(locator_or_element, timeout)
+                element = self.find(locator_or_element)
             else:
                 element = locator_or_element
 
@@ -118,10 +118,10 @@ class BasePage:
             return False
 
     @auto_log
-    def is_element_present(self, locator, timeout=1):
+    def is_element_present(self, locator):
         """Проверяет наличие элемента на странице"""
         try:
-            self.find(locator, timeout)
+            self.find(locator)
             return True
         except TimeoutException:
             return False

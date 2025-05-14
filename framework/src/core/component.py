@@ -61,11 +61,11 @@ class Component:
             raise TimeoutException(f"Элементы {locator} не найдены в компоненте {self.component_name}")
 
     @auto_log
-    def click(self, locator_or_element, timeout=10):
+    def click(self, locator_or_element):
         """Клик по элементу компонента"""
         try:
             if isinstance(locator_or_element, tuple) or isinstance(locator_or_element, Locator):
-                element = self.find(locator_or_element, timeout)
+                element = self.find(locator_or_element)
             else:
                 element = locator_or_element
 
@@ -75,11 +75,11 @@ class Component:
             raise Exception(f"Ошибка при клике в компоненте {self.component_name}: {e}")
 
     @auto_log
-    def type(self, locator_or_element, text, timeout=10):
+    def type(self, locator_or_element, text):
         """Ввод текста в элемент компонента"""
         try:
             if isinstance(locator_or_element, tuple) or isinstance(locator_or_element, Locator):
-                element = self.find(locator_or_element, timeout)
+                element = self.find(locator_or_element)
             else:
                 element = locator_or_element
 

@@ -44,12 +44,6 @@ def multi_driver(setup_logging, request):
     manager.close_all_drivers()
 
 
-def pytest_addoption(parser):
-    """Добавление опций командной строки pytest"""
-    parser.addoption("--browser", action="store", default="chrome", help="Браузер для тестов: chrome или firefox")
-    parser.addoption("--headless", action="store_true", help="Запуск браузера в headless режиме")
-
-
 SCREENSHOTS_DIR = Path("screenshots")
 SCREENSHOTS_DIR.mkdir(exist_ok=True)
 
@@ -57,7 +51,6 @@ SCREENSHOTS_DIR.mkdir(exist_ok=True)
 @pytest.hookimpl(tryfirst=True, hookwrapper=True)
 def pytest_runtest_makereport(item, call):
     """Хук для создания скриншота при падении теста"""
-    # Выполняем хук
     outcome = yield
     rep = outcome.get_result()
 

@@ -73,6 +73,7 @@ class LocatorMeta(type):
             'table': "таблица",
             'menu': "меню",
             'nav': "навигация",
+            'navbar': "навигация",
             'navigation': "навигация",
             'tab': "вкладка",
             'modal': "модальное окно",
@@ -123,6 +124,6 @@ class LocatorMeta(type):
         return description
 
 
-class PageLocator(metaclass=LocatorMeta):
+class PageLocators(metaclass=LocatorMeta):
     """Базовый класс для локаторов страницы с автоматическим описанием"""
     pass
