@@ -1,11 +1,12 @@
 import functools
 import inspect
 import logging
+import threading
 import time
-from ..core.locator import Locator
 
-# Глобальная переменная для отслеживания вложенности вызовов
-call_depth = 0
+from framework.src.core.locator import Locator
+
+call_depth_store = threading.local()
 
 
 def auto_log(func):
@@ -13,19 +14,22 @@ def auto_log(func):
 
     @functools.wraps(func)
     def wrapper(*args, **kwargs):
-        global call_depth
-        indent = "  " * call_depth
+        if not hasattr(call_depth_store, 'depth'):
+            call_depth_store.depth = 0
 
-        class_name = args[0].__class__.__name__ if args else "Unknown"
+        indent = "  " * call_depth_store.depth
+
         method_name = func.__name__
+        driver_id = id(args[0].driver) if hasattr(args[0], 'driver') else 'unknown'
+        page_name = args[0].page_name if hasattr(args[0], 'page_name') else args[0].__class__.__name__
+        action = f"[Driver {driver_id}] {page_name}.{method_name}"
 
-        # Собираем аргументы для лога
         sig = inspect.signature(func)
         bound_args = sig.bind(*args, **kwargs)
         bound_args.apply_defaults()
 
         params = []
-        for name, value in list(bound_args.arguments.items())[1:]:  # Пропускаем self
+        for name, value in list(bound_args.arguments.items())[1:]:
             if hasattr(value, 'description') and isinstance(value, Locator):
                 params.append(f"{value.description}")
             elif isinstance(value, str) and len(value) > 20:
@@ -33,16 +37,15 @@ def auto_log(func):
             else:
                 params.append(f"{name}={value}")
 
-        action = f"{class_name}.{method_name}"
         if params:
             action += f" с {', '.join(params)}"
 
         logging.info(f"{indent}➡️  {action}")
 
-        call_depth += 1
-        start_time = time.time()
+        call_depth_store.depth += 1
 
         try:
+            start_time = time.time()
             result = func(*args, **kwargs)
             end_time = time.time()
             duration = end_time - start_time
@@ -58,6 +61,6 @@ def auto_log(func):
             logging.error(f"{indent}❌ {action} - ошибка: {str(e)}")
             raise
         finally:
-            call_depth -= 1
+            call_depth_store.depth -= 1
 
     return wrapper

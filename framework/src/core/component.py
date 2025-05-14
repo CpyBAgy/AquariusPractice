@@ -1,5 +1,4 @@
 from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
 from selenium.common.exceptions import TimeoutException
 
 from framework.src.core.locator import Locator
@@ -17,12 +16,13 @@ class Component:
         :param root_locator: Локатор корневого элемента компонента
         :param root_element: Корневой элемент компонента (если уже найден)
         """
-        self.page = page
-        self.driver = page.driver
-        self.root_locator = root_locator
-        self._root_element = root_element
-        self.component_name = self.__class__.__name__
-        self._init_elements()
+        self.page = page  # Страница, на которой находится компонент
+        self.driver = page.driver  # Драйвер Selenium
+        self.root_locator = root_locator  # Локатор корневого элемента компонента
+        self._root_element = root_element  # Корневой элемент компонента (если уже найден)
+        self.component_name = self.__class__.__name__  # Имя компонента (класса)
+        self.wait = WebDriverWait(self.driver, 10)  # Ожидание для поиска элементов
+        self._init_elements()  # Инициализация элементов компонента
 
     def _init_elements(self):
         """Инициализирует элементы компонента.
@@ -37,37 +37,24 @@ class Component:
         return self._root_element
 
     @auto_log
-    def find(self, locator, timeout=10):
+    def find(self, locator):
         """Находит элемент внутри компонента"""
         try:
-            if self.root is not None:
-                # Поиск относительно корневого элемента
-                element = WebDriverWait(self.driver, timeout).until(
-                    lambda d: self.root.find_element(*locator)
-                )
-            else:
-                # Поиск относительно всей страницы
-                element = WebDriverWait(self.driver, timeout).until(
-                    EC.presence_of_element_located(locator)
-                )
+            element = self.wait.until(
+                lambda d: self.root.find_element(*locator)
+            )
             return element
         except TimeoutException:
             raise TimeoutException(f"Элемент {locator} не найден в компоненте {self.component_name}")
 
     @auto_log
-    def find_all(self, locator, timeout=10):
+    def find_all(self, locator):
         """Находит все элементы внутри компонента"""
         try:
-            if self.root is not None:
-                WebDriverWait(self.driver, timeout).until(
-                    lambda d: len(self.root.find_elements(*locator)) > 0
-                )
-                elements = self.root.find_elements(*locator)
-            else:
-                WebDriverWait(self.driver, timeout).until(
-                    EC.presence_of_element_located(locator)
-                )
-                elements = self.driver.find_elements(*locator)
+            self.wait.until(
+                lambda d: len(self.root.find_elements(*locator)) > 0
+            )
+            elements = self.root.find_elements(*locator)
 
             return elements
         except TimeoutException:
@@ -103,17 +90,12 @@ class Component:
             raise Exception(f"Ошибка при вводе текста в компоненте {self.component_name}: {e}")
 
     @auto_log
-    def is_visible(self, locator, timeout=10):
+    def is_visible(self, locator):
         """Проверяет видимость элемента в компоненте"""
         try:
-            if self.root is not None:
-                element = WebDriverWait(self.driver, timeout).until(
-                    lambda d: self.root.find_element(*locator)
-                )
-                return element.is_displayed()
-            else:
-                return WebDriverWait(self.driver, timeout).until(
-                    EC.visibility_of_element_located(locator)
-                )
+            element = self.wait.until(
+                lambda d: self.root.find_element(*locator)
+            )
+            return element.is_displayed()
         except TimeoutException:
             return False

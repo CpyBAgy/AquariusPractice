@@ -10,12 +10,12 @@ class BasePage:
     """Базовый класс для всех страниц"""
 
     def __init__(self, driver, base_url=None):
-        self.driver = driver
-        self.base_url = base_url
-        self.url = None
-        self.page_name = self.__class__.__name__
-        self.wait = WebDriverWait(driver, 10)
-        self._init_elements()
+        self.driver = driver  # Драйвер Selenium
+        self.base_url = base_url  # Базовый URL для страниц
+        self.url = None  # URL страницы
+        self.page_name = self.__class__.__name__  # Имя страницы (класса)
+        self.wait = WebDriverWait(driver, 10)  # Ожидание для поиска элементов
+        self._init_elements()  # Инициализация элементов страницы
 
     def _init_elements(self):
         """Инициализирует элементы на странице.
@@ -42,45 +42,45 @@ class BasePage:
             raise ValueError(f"URL не задан для страницы {self.page_name}")
 
     @auto_log
-    def wait_for_page_loaded(self, timeout=30):
+    def wait_for_page_loaded(self):
         """Ожидание загрузки страницы"""
         try:
-            WebDriverWait(self.driver, timeout).until(
+            self.wait.until(
                 lambda d: d.execute_script("return document.readyState") == "complete"
             )
             return True
         except TimeoutException:
-            raise TimeoutException(f"Страница {self.page_name} не загрузилась за {timeout} секунд")
+            raise TimeoutException(f"Страница {self.page_name} не загрузилась за 10 секунд")
 
     @auto_log
-    def find(self, locator, timeout=10):
+    def find(self, locator):
         """Находит элемент с ожиданием"""
         try:
-            element = WebDriverWait(self.driver, timeout).until(
+            element = self.wait.until(
                 EC.presence_of_element_located(locator)
             )
             return element
         except TimeoutException:
-            raise TimeoutException(f"Элемент {locator} не найден за {timeout} секунд")
+            raise TimeoutException(f"Элемент {locator} не найден за 10 секунд")
 
     @auto_log
-    def find_all(self, locator, timeout=10):
+    def find_all(self, locator):
         """Находит все элементы с ожиданием хотя бы одного"""
         try:
-            WebDriverWait(self.driver, timeout).until(
+            self.wait.until(
                 EC.presence_of_element_located(locator)
             )
             elements = self.driver.find_elements(*locator)
             return elements
         except TimeoutException:
-            raise TimeoutException(f"Элементы {locator} не найдены за {timeout} секунд")
+            raise TimeoutException(f"Элементы {locator} не найдены за 10 секунд")
 
     @auto_log
-    def click(self, locator_or_element, timeout=10):
+    def click(self, locator_or_element):
         """Клик по элементу с ожиданием кликабельности"""
         try:
             if isinstance(locator_or_element, tuple) or isinstance(locator_or_element, Locator):
-                element = WebDriverWait(self.driver, timeout).until(
+                element = self.wait.until(
                     EC.element_to_be_clickable(locator_or_element)
                 )
             else:
@@ -107,10 +107,10 @@ class BasePage:
             raise Exception(f"Ошибка при вводе текста: {e}")
 
     @auto_log
-    def is_visible(self, locator, timeout=10):
+    def is_visible(self, locator):
         """Проверяет видимость элемента"""
         try:
-            WebDriverWait(self.driver, timeout).until(
+            self.wait.until(
                 EC.visibility_of_element_located(locator)
             )
             return True
@@ -131,3 +131,9 @@ class BasePage:
         """Переход на другую страницу"""
         new_page = page_class(self.driver, *args, **kwargs)
         return new_page
+
+    @auto_log
+    def navigate_back(self):
+        """Возвращается на предыдущую страницу"""
+        self.driver.back()
+        return self

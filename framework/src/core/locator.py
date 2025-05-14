@@ -91,10 +91,9 @@ class LocatorMeta(type):
                 words = [w for w in words if w != type_word]
                 break
 
-        if "submit" in words:
-            if element_type == "кнопка":
-                words = [w for w in words if w != "submit"]
-                words.append("отправки")
+        if "submit" in words and element_type == "кнопка":
+            words = [w for w in words if w != "submit"]
+            words.append("отправки")
 
         if "login" in words and element_type == "кнопка":
             words = [w for w in words if w != "login"]
@@ -111,19 +110,19 @@ class LocatorMeta(type):
         elif by == By.NAME:
             description += f" (name: {value})"
         elif by == By.CLASS_NAME:
-            description += f" (класс: {value})"
+            description += f" (class: {value})"
         elif by == By.CSS_SELECTOR:
             description += f" (CSS: {value})"
         elif by == By.XPATH:
             description += f" (XPath: {value})"
         elif by == By.LINK_TEXT:
-            description += f" (текст: {value})"
+            description += f" (text: {value})"
         elif by == By.TAG_NAME:
-            description += f" (тег: {value})"
+            description += f" (tag: {value})"
 
         return description
 
 
-class PageLocators(metaclass=LocatorMeta):
+class PageLocator(metaclass=LocatorMeta):
     """Базовый класс для локаторов страницы с автоматическим описанием"""
     pass
