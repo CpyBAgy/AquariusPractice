@@ -1,20 +1,24 @@
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.common.exceptions import TimeoutException
+from typing import TypeVar, Type, Any
 
 from framework.src.core.locator import Locator
 from framework.src.utils.decorators import auto_log
 
+T = TypeVar('T', bound='BasePage')
+E = TypeVar('E', bound='BaseElement')
+
 
 class BasePage:
     """Базовый класс для всех страниц"""
+    DEFAULT_URL = None  # Переопределяется в подклассах
 
-    def __init__(self, driver, base_url=None):
+    def __init__(self, driver, url=None, timeout=10):
         self.driver = driver  # Драйвер Selenium
-        self.base_url = base_url  # Базовый URL для страниц
-        self.url = None  # URL страницы
+        self.url = url or self.DEFAULT_URL  # URL страницы (по умолчанию None)
         self.page_name = self.__class__.__name__  # Имя страницы (класса)
-        self.wait = WebDriverWait(driver, 10)  # Ожидание для поиска элементов
+        self.wait = WebDriverWait(driver, timeout)  # Ожидание для поиска элементов
         self._init_elements()  # Инициализация элементов страницы
 
     def _init_elements(self):
@@ -27,27 +31,25 @@ class BasePage:
         """Возвращает заголовок страницы"""
         return self.driver.title
 
+    def _is_page_loaded(self):
+        """Проверяет загружена ли страница (внутренний метод)"""
+        return self.driver.execute_script("return document.readyState") == "complete"
+
     @auto_log
     def open(self):
         """Открывает страницу по URL"""
-        if self.url:
-            full_url = self.url
-            if self.base_url and not self.url.startswith(('http://', 'https://')):
-                full_url = f"{self.base_url.rstrip('/')}/{self.url.lstrip('/')}"
-
-            self.driver.get(full_url)
-            self.wait_for_page_loaded()
-            return self
-        else:
+        if not self.url:
             raise ValueError(f"URL не задан для страницы {self.page_name}")
+
+        self.driver.get(self.url)
+        self.wait_for_page_loaded()
+        return self
 
     @auto_log
     def wait_for_page_loaded(self):
-        """Ожидание загрузки страницы"""
+        """Ожидание загрузки страницы с использованием лямбды"""
         try:
-            self.wait.until(
-                lambda d: d.execute_script("return document.readyState") == "complete"
-            )
+            self.wait.until(lambda d: self._is_page_loaded())
             return True
         except TimeoutException:
             raise TimeoutException(f"Страница {self.page_name} не загрузилась за 10 секунд")
@@ -87,7 +89,7 @@ class BasePage:
                 element = locator_or_element
 
             element.click()
-            return True
+            return self
         except Exception as e:
             raise Exception(f"Ошибка при клике: {e}")
 
@@ -102,12 +104,12 @@ class BasePage:
 
             element.clear()
             element.send_keys(text)
-            return True
+            return self
         except Exception as e:
             raise Exception(f"Ошибка при вводе текста: {e}")
 
     @auto_log
-    def is_visible(self, locator):
+    def is_element_visible(self, locator):
         """Проверяет видимость элемента"""
         try:
             self.wait.until(
@@ -127,9 +129,18 @@ class BasePage:
             return False
 
     @auto_log
-    def navigate_to(self, page_class, *args, **kwargs):
-        """Переход на другую страницу"""
+    def navigate_to(self, page_class: Type[T], *args: Any, **kwargs: Any) -> T:
+        """
+        Переход на другую страницу.
+
+        Автоматически открывает страницу, если у неё задан URL.
+        Возвращает типизированный объект страницы.
+        """
         new_page = page_class(self.driver, *args, **kwargs)
+
+        if hasattr(new_page, 'url') and new_page.url:  # Проверяем, есть ли у страницы URL во избежание ошибок
+            new_page.open()
+
         return new_page
 
     @auto_log

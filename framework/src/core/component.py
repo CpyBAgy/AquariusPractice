@@ -1,101 +1,163 @@
 from selenium.webdriver.support.ui import WebDriverWait
-from selenium.common.exceptions import TimeoutException
+from selenium.webdriver.support.ui import Select
 
-from framework.src.core.locator import Locator
 from framework.src.utils.decorators import auto_log
 
 
-class Component:
-    """Базовый класс для компонентов страницы (регионов)"""
+class BaseElement:
+    """Базовый класс для элементов страницы"""
 
-    def __init__(self, page, root_locator=None, root_element=None):
-        """
-        Инициализация компонента.
-
-        :param page: Страница, на которой находится компонент
-        :param root_locator: Локатор корневого элемента компонента
-        :param root_element: Корневой элемент компонента (если уже найден)
-        """
-        self.page = page  # Страница, на которой находится компонент
-        self.driver = page.driver  # Драйвер Selenium
-        self.root_locator = root_locator  # Локатор корневого элемента компонента
-        self._root_element = root_element  # Корневой элемент компонента (если уже найден)
-        self.component_name = self.__class__.__name__  # Имя компонента (класса)
-        self.wait = WebDriverWait(self.driver, 10)  # Ожидание для поиска элементов
-        self._init_elements()  # Инициализация элементов компонента
-
-    def _init_elements(self):
-        """Инициализирует элементы компонента.
-        Переопределяется в подклассах."""
-        pass
+    def __init__(self, page, locator):
+        self.page = page
+        self.driver = page.driver
+        self.locator = locator
+        self.wait = WebDriverWait(self.driver, 10)
 
     @property
-    def root(self):
-        """Получает корневой элемент компонента"""
-        if self._root_element is None and self.root_locator is not None:
-            self._root_element = self.page.find(self.root_locator)
-        return self._root_element
+    def element(self):
+        """Получает элемент"""
+        return self.page.find(self.locator)
+
+    def is_visible(self):
+        """Проверяет видимость элемента"""
+        return self.page.is_element_visible(self.locator)
+
+    def is_present(self):
+        """Проверяет наличие элемента"""
+        return self.page.is_element_present(self.locator)
+
+
+class Button(BaseElement):
+    """Кнопка"""
+
+    def click(self):
+        """Кликает по кнопке"""
+        self.page.click(self.locator)
+        return self.page
+
+    def is_enabled(self):
+        """Проверяет, активна ли кнопка"""
+        return self.element.is_enabled()
+
+    def get_text(self):
+        """Получает текст кнопки"""
+        return self.element.text
+
+
+class Input(BaseElement):
+    """Поле ввода"""
+
+    def type(self, text):
+        """Вводит текст в поле"""
+        self.page.type(self.locator, text)
+        return self.page
+
+    def clear(self):
+        """Очищает поле"""
+        self.element.clear()
+        return self.page
+
+    def get_value(self):
+        """Получает значение поля"""
+        return self.element.get_attribute("value")
+
+
+class Checkbox(BaseElement):
+    """Чекбокс"""
+
+    def check(self):
+        """Отмечает чекбокс"""
+        if not self.is_checked():
+            self.page.click(self.locator)
+        return self.page
+
+    def uncheck(self):
+        """Снимает отметку с чекбокса"""
+        if self.is_checked():
+            self.page.click(self.locator)
+        return self.page
+
+    def is_checked(self):
+        """Проверяет, отмечен ли чекбокс"""
+        return self.element.is_selected()
+
+
+class Radio(BaseElement):
+    """Радиокнопка"""
+
+    def select(self):
+        """Выбирает радиокнопку"""
+        if not self.is_selected():
+            self.page.click(self.locator)
+        return self.page
+
+    def is_selected(self):
+        """Проверяет, выбрана ли радиокнопка"""
+        return self.element.is_selected()
+
+
+class Dropdown(BaseElement):
+    """Выпадающий список"""
+
+    def select_by_text(self, text):
+        """Выбирает элемент по видимому тексту"""
+        select = Select(self.element)
+        select.select_by_visible_text(text)
+        return self.page
+
+    def select_by_index(self, index):
+        """Выбирает элемент по индексу"""
+        select = Select(self.element)
+        select.select_by_index(index)
+        return self.page
+
+    def get_selected_option(self):
+        """Получает выбранный элемент"""
+        select = Select(self.element)
+        return select.first_selected_option
+
+
+class Link(BaseElement):
+    """Ссылка"""
+
+    def click(self):
+        """Кликает по ссылке"""
+        self.page.click(self.locator)
+        return self.page
+
+    def get_url(self):
+        """Получает URL ссылки"""
+        return self.element.get_attribute("href")
+
+    def get_text(self):
+        """Получает текст ссылки"""
+        return self.element.text
+
+
+class ElementGroup:
+    """Базовый класс для групп элементов на странице"""
+
+    def __init__(self, page, timeout=10):
+        """
+        Инициализация группы элементов.
+
+        Args:
+            page: Страница, на которой находится группа элементов
+        """
+        self.page = page
+        self.driver = page.driver
+        self.wait = WebDriverWait(self.driver, timeout)
+        self.group_name = self.__class__.__name__
+        self._init_elements()
+
+    def _init_elements(self):
+        """
+        Инициализирует элементы группы.
+        Переопределяется в подклассах для создания элементов.
+        """
+        pass
 
     @auto_log
-    def find(self, locator):
-        """Находит элемент внутри компонента"""
-        try:
-            element = self.wait.until(
-                lambda d: self.root.find_element(*locator)
-            )
-            return element
-        except TimeoutException:
-            raise TimeoutException(f"Элемент {locator} не найден в компоненте {self.component_name}")
-
-    @auto_log
-    def find_all(self, locator):
-        """Находит все элементы внутри компонента"""
-        try:
-            self.wait.until(
-                lambda d: len(self.root.find_elements(*locator)) > 0
-            )
-            elements = self.root.find_elements(*locator)
-
-            return elements
-        except TimeoutException:
-            raise TimeoutException(f"Элементы {locator} не найдены в компоненте {self.component_name}")
-
-    @auto_log
-    def click(self, locator_or_element):
-        """Клик по элементу компонента"""
-        try:
-            if isinstance(locator_or_element, tuple) or isinstance(locator_or_element, Locator):
-                element = self.find(locator_or_element)
-            else:
-                element = locator_or_element
-
-            element.click()
-            return True
-        except Exception as e:
-            raise Exception(f"Ошибка при клике в компоненте {self.component_name}: {e}")
-
-    @auto_log
-    def type(self, locator_or_element, text):
-        """Ввод текста в элемент компонента"""
-        try:
-            if isinstance(locator_or_element, tuple) or isinstance(locator_or_element, Locator):
-                element = self.find(locator_or_element)
-            else:
-                element = locator_or_element
-
-            element.clear()
-            element.send_keys(text)
-            return True
-        except Exception as e:
-            raise Exception(f"Ошибка при вводе текста в компоненте {self.component_name}: {e}")
-
-    @auto_log
-    def is_visible(self, locator):
-        """Проверяет видимость элемента в компоненте"""
-        try:
-            element = self.wait.until(
-                lambda d: self.root.find_element(*locator)
-            )
-            return element.is_displayed()
-        except TimeoutException:
-            return False
+    def wait_for_page_loaded(self):
+        """Ожидание загрузки страницы"""
+        return self.page.wait_for_page_loaded()
