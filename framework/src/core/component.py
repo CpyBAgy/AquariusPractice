@@ -1,5 +1,7 @@
 from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import Select
+from selenium.common.exceptions import TimeoutException
 
 from framework.src.utils.decorators import auto_log
 
@@ -7,56 +9,97 @@ from framework.src.utils.decorators import auto_log
 class BaseElement:
     """Базовый класс для элементов страницы"""
 
-    def __init__(self, page, locator):
+    def __init__(self, page, locator, element=None):
         self.page = page
         self.driver = page.driver
         self.locator = locator
+        self._element = element  # Можно передать уже найденный элемент
         self.wait = WebDriverWait(self.driver, 10)
 
     @property
     def element(self):
         """Получает элемент"""
-        return self.page.find(self.locator)
+        if self._element is None:
+            try:
+                self._element = self.wait.until(
+                    EC.presence_of_element_located(self.locator)
+                )
+            except TimeoutException:
+                raise TimeoutException(f"Элемент {self.locator} не найден за 10 секунд")
+        return self._element
 
+    @auto_log
     def is_visible(self):
         """Проверяет видимость элемента"""
-        return self.page.is_element_visible(self.locator)
+        try:
+            self.wait.until(
+                EC.visibility_of_element_located(self.locator)
+            )
+            return True
+        except TimeoutException:
+            return False
 
+    @auto_log
     def is_present(self):
         """Проверяет наличие элемента"""
-        return self.page.is_element_present(self.locator)
+        try:
+            self.element()
+            return True
+        except TimeoutException:
+            return False
+
+    @auto_log
+    def click(self):
+        """Базовый метод клика для всех элементов"""
+        try:
+            clickable_element = self.wait.until(
+                EC.element_to_be_clickable(self.locator)
+            )
+            clickable_element.click()
+            return self.page
+        except Exception as e:
+            raise Exception(f"Ошибка при клике: {e}")
+
+    @auto_log
+    def get_text(self):
+        """Получает текст элемента"""
+        return self.element.text
+
+    @auto_log
+    def get_attribute(self, name):
+        """Получает атрибут элемента"""
+        return self.element.get_attribute(name)
 
 
 class Button(BaseElement):
     """Кнопка"""
 
-    def click(self):
-        """Кликает по кнопке"""
-        self.page.click(self.locator)
-        return self.page
-
+    @auto_log
     def is_enabled(self):
         """Проверяет, активна ли кнопка"""
         return self.element.is_enabled()
-
-    def get_text(self):
-        """Получает текст кнопки"""
-        return self.element.text
 
 
 class Input(BaseElement):
     """Поле ввода"""
 
+    @auto_log
     def type(self, text):
         """Вводит текст в поле"""
-        self.page.type(self.locator, text)
-        return self.page
+        try:
+            self.element.clear()
+            self.element.send_keys(text)
+            return self.page
+        except Exception as e:
+            raise Exception(f"Ошибка при вводе текста: {e}")
 
+    @auto_log
     def clear(self):
         """Очищает поле"""
         self.element.clear()
         return self.page
 
+    @auto_log
     def get_value(self):
         """Получает значение поля"""
         return self.element.get_attribute("value")
@@ -65,18 +108,21 @@ class Input(BaseElement):
 class Checkbox(BaseElement):
     """Чекбокс"""
 
+    @auto_log
     def check(self):
         """Отмечает чекбокс"""
         if not self.is_checked():
-            self.page.click(self.locator)
+            self.click()
         return self.page
 
+    @auto_log
     def uncheck(self):
         """Снимает отметку с чекбокса"""
         if self.is_checked():
-            self.page.click(self.locator)
+            self.click()
         return self.page
 
+    @auto_log
     def is_checked(self):
         """Проверяет, отмечен ли чекбокс"""
         return self.element.is_selected()
@@ -85,12 +131,14 @@ class Checkbox(BaseElement):
 class Radio(BaseElement):
     """Радиокнопка"""
 
+    @auto_log
     def select(self):
         """Выбирает радиокнопку"""
         if not self.is_selected():
-            self.page.click(self.locator)
+            self.click()
         return self.page
 
+    @auto_log
     def is_selected(self):
         """Проверяет, выбрана ли радиокнопка"""
         return self.element.is_selected()
@@ -99,18 +147,21 @@ class Radio(BaseElement):
 class Dropdown(BaseElement):
     """Выпадающий список"""
 
+    @auto_log
     def select_by_text(self, text):
         """Выбирает элемент по видимому тексту"""
         select = Select(self.element)
         select.select_by_visible_text(text)
         return self.page
 
+    @auto_log
     def select_by_index(self, index):
         """Выбирает элемент по индексу"""
         select = Select(self.element)
         select.select_by_index(index)
         return self.page
 
+    @auto_log
     def get_selected_option(self):
         """Получает выбранный элемент"""
         select = Select(self.element)
@@ -120,18 +171,10 @@ class Dropdown(BaseElement):
 class Link(BaseElement):
     """Ссылка"""
 
-    def click(self):
-        """Кликает по ссылке"""
-        self.page.click(self.locator)
-        return self.page
-
+    @auto_log
     def get_url(self):
         """Получает URL ссылки"""
         return self.element.get_attribute("href")
-
-    def get_text(self):
-        """Получает текст ссылки"""
-        return self.element.text
 
 
 class ElementGroup:
