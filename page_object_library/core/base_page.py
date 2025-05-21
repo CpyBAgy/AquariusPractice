@@ -3,15 +3,16 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.common.exceptions import TimeoutException
 from typing import TypeVar, Type
 
-from framework.utils.decorators import auto_log
-from framework.core.component import BaseElement, Button, Input, Checkbox, Radio, Dropdown, Link
+from page_object_library.core.locator import LocatorMeta
+from page_object_library.utils.decorators import auto_log
+from page_object_library.core.component import BaseElement
 
 
 T = TypeVar('T', bound='BasePage')
 E = TypeVar('E', bound='BaseElement')
 
 
-class BasePage:
+class BasePage(metaclass=LocatorMeta):
     """Базовый класс для всех страниц"""
     DEFAULT_URL = None  # Переопределяется в подклассах
 
@@ -77,72 +78,6 @@ class BasePage:
             return [BaseElement(self, locator, element=element) for element in elements]
         except TimeoutException:
             raise TimeoutException(f"Элементы {locator} не найдены за 10 секунд")
-
-    @auto_log
-    def find_button(self, locator) -> Button:
-        """Находит и возвращает объект кнопки"""
-        try:
-            self.wait.until(
-                EC.presence_of_element_located(locator)
-            )
-            return Button(self, locator)
-        except TimeoutException:
-            raise TimeoutException(f"Кнопка {locator} не найдена за 10 секунд")
-
-    @auto_log
-    def find_input(self, locator) -> Input:
-        """Находит и возвращает объект поля ввода"""
-        try:
-            self.wait.until(
-                EC.presence_of_element_located(locator)
-            )
-            return Input(self, locator)
-        except TimeoutException:
-            raise TimeoutException(f"Поле ввода {locator} не найдено за 10 секунд")
-
-    @auto_log
-    def find_checkbox(self, locator) -> Checkbox:
-        """Находит и возвращает объект чекбокса"""
-        try:
-            self.wait.until(
-                EC.presence_of_element_located(locator)
-            )
-            return Checkbox(self, locator)
-        except TimeoutException:
-            raise TimeoutException(f"Чекбокс {locator} не найден за 10 секунд")
-
-    @auto_log
-    def find_radio(self, locator) -> Radio:
-        """Находит и возвращает объект радиокнопки"""
-        try:
-            self.wait.until(
-                EC.presence_of_element_located(locator)
-            )
-            return Radio(self, locator)
-        except TimeoutException:
-            raise TimeoutException(f"Радиокнопка {locator} не найдена за 10 секунд")
-
-    @auto_log
-    def find_dropdown(self, locator) -> Dropdown:
-        """Находит и возвращает объект выпадающего списка"""
-        try:
-            self.wait.until(
-                EC.presence_of_element_located(locator)
-            )
-            return Dropdown(self, locator)
-        except TimeoutException:
-            raise TimeoutException(f"Выпадающий список {locator} не найден за 10 секунд")
-
-    @auto_log
-    def find_link(self, locator) -> Link:
-        """Находит и возвращает объект ссылки"""
-        try:
-            self.wait.until(
-                EC.presence_of_element_located(locator)
-            )
-            return Link(self, locator)
-        except TimeoutException:
-            raise TimeoutException(f"Ссылка {locator} не найдена за 10 секунд")
 
     @auto_log
     def navigate_to(self, page_class: Type[T]) -> T:

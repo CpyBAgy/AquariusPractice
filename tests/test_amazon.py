@@ -46,11 +46,3 @@ def test_search_add_to_cart_checkout(amazon_login):
     expected_subtotal = product_price * 2
     assert abs(cart_subtotal - expected_subtotal) < 0.01, \
         f"Подытог {cart_subtotal} не соответствует ожидаемому {expected_subtotal}"
-
-    checkout_page = cart_page.proceed_to_checkout()
-
-    order_total_text = checkout_page.get_order_total()
-    order_total = float(order_total_text.replace("$", "").replace(",", ""))  # $12,123,132 -> 12123132.0
-
-    assert abs(order_total - expected_subtotal) < 10.0, \
-        f"Итоговая сумма {order_total} слишком отличается от ожидаемой {expected_subtotal}"

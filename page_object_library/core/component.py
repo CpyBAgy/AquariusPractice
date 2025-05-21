@@ -3,7 +3,8 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import Select
 from selenium.common.exceptions import TimeoutException
 
-from framework.utils.decorators import auto_log
+from page_object_library.core.locator import LocatorMeta
+from page_object_library.utils.decorators import auto_log
 
 
 class BaseElement:
@@ -177,7 +178,7 @@ class Link(BaseElement):
         return self.element.get_attribute("href")
 
 
-class ElementGroup:
+class ElementGroup(metaclass=LocatorMeta):
     """Базовый класс для групп элементов на странице"""
 
     def __init__(self, page, timeout=10):
