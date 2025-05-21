@@ -5,7 +5,7 @@ import threading
 import time
 from typing import Any, Callable
 
-from framework.src.core.locator import Locator
+from framework.core.locator import Locator
 
 # Хранилище для глубины вызовов
 call_depth_store = threading.local()

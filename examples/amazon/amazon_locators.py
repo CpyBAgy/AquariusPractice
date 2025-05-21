@@ -1,5 +1,5 @@
 from selenium.webdriver.common.by import By
-from framework.src.core.locator import PageLocators
+from framework.core.locator import PageLocators
 
 
 class AmazonLoginPageLocators(PageLocators):

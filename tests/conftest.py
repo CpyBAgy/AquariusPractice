@@ -3,8 +3,8 @@ import logging
 from datetime import datetime
 from pathlib import Path
 
-from framework.src.core import DriverFactory, MultiDriverManager
-from framework.src.utils import setup_logger
+from framework.core import DriverFactory, MultiDriverManager
+from framework.utils import setup_logger
 
 
 @pytest.fixture(scope="session")

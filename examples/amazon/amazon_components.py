@@ -1,6 +1,6 @@
-from framework.src.core.component import ElementGroup
-from framework.src.utils.decorators import auto_log
-from framework.tests.locators.amazon_component_locators import (
+from framework.core.component import ElementGroup
+from framework.utils import auto_log
+from tests.locators.amazon_component_locators import (
     SearchSuggestionLocators,
     HeaderComponentLocators,
     CartItemLocators,
@@ -25,7 +25,7 @@ class SearchSuggestionComponent(ElementGroup):
         suggestions = self.page.find_elements(self.locators.SUGGESTION_ITEM)
         if len(suggestions) > index:
             suggestions[index].click()
-            from framework.tests.pages.amazon_pages import AmazonSearchResultsPage
+            from tests.pages.amazon_pages import AmazonSearchResultsPage
             return self.page.navigate_to(AmazonSearchResultsPage)
         raise ValueError(f"Подсказка с индексом {index} не найдена")
 
@@ -50,14 +50,14 @@ class HeaderComponent(ElementGroup):
         """Выполняет поиск товара"""
         self.search_input.type(search_text)
         self.search_button.click()
-        from framework.tests.pages.amazon_pages import AmazonSearchResultsPage
+        from tests.pages.amazon_pages import AmazonSearchResultsPage
         return self.page.navigate_to(AmazonSearchResultsPage)
 
     @auto_log
     def go_to_cart(self):
         """Переходит в корзину"""
         self.cart_icon.click()
-        from framework.tests.pages.amazon_pages import AmazonCartPage
+        from tests.pages.amazon_pages import AmazonCartPage
         return self.page.navigate_to(AmazonCartPage)
 
     @auto_log
@@ -174,6 +174,6 @@ class ProductDetailsComponent(ElementGroup):
         self.page.wait_for_page_loaded()
 
         if "cart" in self.page.driver.current_url:
-            from framework.tests.pages.amazon_pages import AmazonCartPage
+            from tests.pages.amazon_pages import AmazonCartPage
             return self.page.navigate_to(AmazonCartPage)
         return self.page

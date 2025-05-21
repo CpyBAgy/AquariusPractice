@@ -1,6 +1,6 @@
 import logging
 import pytest
-from framework.tests.pages.amazon_pages import AmazonLoginPage
+from tests.pages.amazon_pages import AmazonLoginPage
 
 
 @pytest.fixture
@@ -33,11 +33,11 @@ def test_search_add_to_cart_checkout(amazon_login):
 
     cart_page = product_page.add_to_cart()
 
-    if "cart" not in cart_page.driver.current_url:
+    if "cart" not in cart_page.driver.current_url:  --АСУЖДАЕМ, добавили и не переходим
         cart_page = home_page.header.go_to_cart()
 
     cart_items = cart_page.get_cart_items()
-    if cart_items:
+    if cart_items:  -- Assert а не иф
         cart_items[0].increase_quantity()
 
     cart_subtotal_text = cart_page.get_subtotal()

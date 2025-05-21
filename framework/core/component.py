@@ -3,7 +3,7 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import Select
 from selenium.common.exceptions import TimeoutException
 
-from framework.src.utils.decorators import auto_log
+from framework.utils.decorators import auto_log
 
 
 class BaseElement:

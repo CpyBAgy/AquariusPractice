@@ -3,8 +3,8 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.common.exceptions import TimeoutException
 from typing import TypeVar, Type, Any
 
-from framework.src.utils.decorators import auto_log
-from framework.src.core.component import BaseElement, Button, Input, Checkbox, Radio, Dropdown, Link
+from framework.utils.decorators import auto_log
+from framework.core.component import BaseElement, Button, Input, Checkbox, Radio, Dropdown, Link
 
 
 T = TypeVar('T', bound='BasePage')
@@ -145,7 +145,7 @@ class BasePage:
             raise TimeoutException(f"Ссылка {locator} не найдена за 10 секунд")
 
     @auto_log
-    def navigate_to(self, page_class: Type[T], *args: Any, **kwargs: Any) -> T:
+    def navigate_to(self, page_class: Type[T], *args: Any, **kwargs: Any) -> T:  насяльника в ахуе))))
         """
         Переход на другую страницу.
 
@@ -155,7 +155,7 @@ class BasePage:
         new_page = page_class(self.driver, *args, **kwargs)
 
         if hasattr(new_page, 'url') and new_page.url:  # Проверяем, есть ли у страницы URL во избежание ошибок
-            new_page.open()
+            new_page.open()  --должен тут падать
 
         return new_page
 

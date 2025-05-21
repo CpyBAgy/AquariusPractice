@@ -1,12 +1,13 @@
-from framework.src.core.base_page import BasePage
-from framework.tests.locators.amazon_locators import (
+from framework.core import BasePage
+from framework.core.component import Input
+from tests.locators.amazon_locators import (
     AmazonLoginPageLocators,
     AmazonHomePageLocators,
     AmazonSearchResultsLocators,
     AmazonProductPageLocators,
     AmazonCartPageLocators
 )
-from framework.tests.components.amazon_components import (
+from tests.components.amazon_components import (
     HeaderComponent,
     ProductDetailsComponent
 )
@@ -21,7 +22,7 @@ class AmazonLoginPage(BasePage):
 
     def _init_elements(self):
         """Инициализирует элементы страницы, используя новый подход"""
-        self.email_input = self.find_input(self.locators.EMAIL_INPUT),
+        self.email_input = Input(self.locators.EMAIL_INPUT),
         self.continue_button = self.find_button(self.locators.CONTINUE_BUTTON),
         self.password_input = self.find_input(self.locators.PASSWORD_INPUT),
         self.sign_in_button = self.find_button(self.locators.SIGN_IN_BUTTON),
@@ -132,7 +133,7 @@ class AmazonCartPage(BasePage):
         """Получает список компонентов элементов корзины"""
         items = self.find_elements(self.locators.CART_ITEMS)
 
-        from framework.tests.components.amazon_components import CartItemComponent
+        from tests.components.amazon_components import CartItemComponent
         return [CartItemComponent(self, item.element) for item in items]
 
     def get_cart_items_count(self):
@@ -146,5 +147,5 @@ class AmazonCartPage(BasePage):
     def proceed_to_checkout(self):
         """Переходит к оформлению заказа"""
         self.proceed_to_checkout.click()
-        from framework.tests.pages.amazon_pages import AmazonCheckoutPage
+        from tests.pages.amazon_pages import AmazonCheckoutPage
         return self.navigate_to(AmazonCheckoutPage)
