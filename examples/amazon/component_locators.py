@@ -1,5 +1,5 @@
 from selenium.webdriver.common.by import By
-from framework.core.locator import PageLocators
+from framework import PageLocators
 
 
 class SearchSuggestionLocators(PageLocators):

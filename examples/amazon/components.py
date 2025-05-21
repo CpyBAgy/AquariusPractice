@@ -1,6 +1,6 @@
 from framework.core.component import ElementGroup
-from framework.utils import auto_log
-from tests.locators.amazon_component_locators import (
+from framework import auto_log
+from examples.amazon.component_locators import (
     SearchSuggestionLocators,
     HeaderComponentLocators,
     CartItemLocators,

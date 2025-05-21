@@ -1,13 +1,13 @@
-from framework.core import BasePage
-from framework.core.component import Input
-from tests.locators.amazon_locators import (
+from framework import BasePage
+from framework import Input
+from examples.amazon.locators import (
     AmazonLoginPageLocators,
     AmazonHomePageLocators,
     AmazonSearchResultsLocators,
     AmazonProductPageLocators,
     AmazonCartPageLocators
 )
-from tests.components.amazon_components import (
+from examples.amazon.components import (
     HeaderComponent,
     ProductDetailsComponent
 )
@@ -109,9 +109,6 @@ class AmazonProductPage(BasePage):
         """Добавляет товар в корзину через кнопку"""
         self.add_to_cart_button.click()
         self.wait_for_page_loaded()
-
-        if "cart" in self.driver.current_url:
-            return self.navigate_to(AmazonCartPage)
         return self
 
 
