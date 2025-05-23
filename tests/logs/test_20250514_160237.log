@@ -1,0 +1,59 @@
+2025-05-14 16:02:37 - INFO - Логирование настроено. Лог-файл: logs/test_20250514_160237.log
+2025-05-14 16:02:37 - INFO - Создание драйвера chrome. Headless: False
+2025-05-14 16:02:38 - INFO - ➡️  [Driver 4713651984] AmazonLoginPage.open
+2025-05-14 16:02:46 - INFO -   ➡️  [Driver 4713651984] AmazonLoginPage.wait_for_page_loaded
+2025-05-14 16:02:46 - INFO -   ✅ [Driver 4713651984] AmazonLoginPage.wait_for_page_loaded - успешно
+2025-05-14 16:02:46 - INFO - ✅ [Driver 4713651984] AmazonLoginPage.open - успешно (за 7.18с)
+2025-05-14 16:02:46 - INFO - ➡️  [Driver 4713651984] AmazonLoginPage.type с поле ввода email (ID: ap_email), text=vancous220@gmail.com
+2025-05-14 16:02:46 - INFO -   ➡️  [Driver 4713651984] AmazonLoginPage.find с поле ввода email (ID: ap_email)
+2025-05-14 16:02:46 - INFO -   ✅ [Driver 4713651984] AmazonLoginPage.find с поле ввода email (ID: ap_email) - успешно
+2025-05-14 16:02:46 - INFO - ✅ [Driver 4713651984] AmazonLoginPage.type с поле ввода email (ID: ap_email), text=vancous220@gmail.com - успешно
+2025-05-14 16:02:46 - INFO - ➡️  [Driver 4713651984] AmazonLoginPage.click с кнопка continue (ID: continue)
+2025-05-14 16:02:47 - INFO - ✅ [Driver 4713651984] AmazonLoginPage.click с кнопка continue (ID: continue) - успешно (за 1.15с)
+2025-05-14 16:02:47 - INFO - ➡️  [Driver 4713651984] AmazonLoginPage.type с поле ввода password (ID: ap_password), text=MyStrongPassword
+2025-05-14 16:02:47 - INFO -   ➡️  [Driver 4713651984] AmazonLoginPage.find с поле ввода password (ID: ap_password)
+2025-05-14 16:02:47 - INFO -   ✅ [Driver 4713651984] AmazonLoginPage.find с поле ввода password (ID: ap_password) - успешно
+2025-05-14 16:02:47 - INFO - ✅ [Driver 4713651984] AmazonLoginPage.type с поле ввода password (ID: ap_password), text=MyStrongPassword - успешно
+2025-05-14 16:02:47 - INFO - ➡️  [Driver 4713651984] AmazonLoginPage.click с кнопка sign in (ID: signInSubmit)
+2025-05-14 16:02:50 - INFO - ✅ [Driver 4713651984] AmazonLoginPage.click с кнопка sign in (ID: signInSubmit) - успешно (за 3.55с)
+2025-05-14 16:02:50 - INFO - ➡️  [Driver 4713651984] AmazonLoginPage.navigate_to с page_class=<class 'framework.tests.pages.amazon_pages.AmazonHomePage'>, args=(), kwargs={}
+2025-05-14 16:02:50 - INFO - ✅ [Driver 4713651984] AmazonLoginPage.navigate_to с page_class=<class 'framework.tests.pages.amazon_pages.AmazonHomePage'>, args=(), kwargs={} - успешно
+2025-05-14 16:02:50 - INFO - === Начало теста с добавлением элемента в корзину и проверкой стоимости ===
+2025-05-14 16:02:50 - INFO - ➡️  [Driver 4713651984] HeaderComponent.type с поле ввода search (ID: twotabsearchtextbox), text=levoit air purifier
+2025-05-14 16:02:50 - INFO -   ➡️  [Driver 4713651984] HeaderComponent.find с поле ввода search (ID: twotabsearchtextbox)
+2025-05-14 16:02:50 - INFO -     ➡️  [Driver 4713651984] AmazonHomePage.find с элемент navbar (ID: navbar)
+2025-05-14 16:02:50 - INFO -     ✅ [Driver 4713651984] AmazonHomePage.find с элемент navbar (ID: navbar) - успешно
+2025-05-14 16:02:50 - INFO -   ✅ [Driver 4713651984] HeaderComponent.find с поле ввода search (ID: twotabsearchtextbox) - успешно
+2025-05-14 16:02:50 - INFO - ✅ [Driver 4713651984] HeaderComponent.type с поле ввода search (ID: twotabsearchtextbox), text=levoit air purifier - успешно
+2025-05-14 16:02:50 - INFO - ➡️  [Driver 4713651984] HeaderComponent.click с кнопка search (ID: nav-search-submit-button)
+2025-05-14 16:02:50 - INFO -   ➡️  [Driver 4713651984] HeaderComponent.find с кнопка search (ID: nav-search-submit-button)
+2025-05-14 16:02:50 - INFO -   ✅ [Driver 4713651984] HeaderComponent.find с кнопка search (ID: nav-search-submit-button) - успешно
+2025-05-14 16:02:53 - INFO - ✅ [Driver 4713651984] HeaderComponent.click с кнопка search (ID: nav-search-submit-button) - успешно (за 2.77с)
+2025-05-14 16:02:53 - INFO - ➡️  [Driver 4713651984] AmazonHomePage.navigate_to с page_class=<class 'framework.tests.pages.amazon_pages.AmazonSearchResultsPage'>, args=(), kwargs={}
+2025-05-14 16:02:53 - INFO - ✅ [Driver 4713651984] AmazonHomePage.navigate_to с page_class=<class 'framework.tests.pages.amazon_pages.AmazonSearchResultsPage'>, args=(), kwargs={} - успешно
+2025-05-14 16:02:53 - INFO - ➡️  [Driver 4713651984] AmazonSearchResultsPage.find_all с элемент product titles (CSS: span.a-size-medium)
+2025-05-14 16:02:53 - INFO - ✅ [Driver 4713651984] AmazonSearchResultsPage.find_all с элемент product titles (CSS: span.a-size-medium) - успешно
+2025-05-14 16:02:53 - INFO - ➡️  [Driver 4713651984] AmazonSearchResultsPage.click с locator_or_element=<selenium.webdriver.remote.webelement.WebElement (session="ee07e2578d1f2207f9cba29989c95d35", element="f.306775915BCE64CBABE44BBA301F4028.d.48BEFAAB641EE280719622ED275E8556.e.6361")>
+2025-05-14 16:02:53 - ERROR - ❌ [Driver 4713651984] AmazonSearchResultsPage.click с locator_or_element=<selenium.webdriver.remote.webelement.WebElement (session="ee07e2578d1f2207f9cba29989c95d35", element="f.306775915BCE64CBABE44BBA301F4028.d.48BEFAAB641EE280719622ED275E8556.e.6361")> - ошибка: Ошибка при клике: Message: element not interactable
+  (Session info: chrome=136.0.7103.93)
+Stacktrace:
+0   chromedriver                        0x00000001010a03bc cxxbridge1$str$ptr + 2829900
+1   chromedriver                        0x0000000101098684 cxxbridge1$str$ptr + 2797844
+2   chromedriver                        0x0000000100bd5e30 cxxbridge1$string$len + 89744
+3   chromedriver                        0x0000000100c1e1e0 cxxbridge1$string$len + 385600
+4   chromedriver                        0x0000000100c12f14 cxxbridge1$string$len + 339828
+5   chromedriver                        0x0000000100c129a0 cxxbridge1$string$len + 338432
+6   chromedriver                        0x0000000100c5e044 cxxbridge1$string$len + 647332
+7   chromedriver                        0x0000000100c113f8 cxxbridge1$string$len + 332888
+8   chromedriver                        0x00000001010647e0 cxxbridge1$str$ptr + 2585200
+9   chromedriver                        0x0000000101067ab0 cxxbridge1$str$ptr + 2598208
+10  chromedriver                        0x0000000101045db4 cxxbridge1$str$ptr + 2459716
+11  chromedriver                        0x0000000101068328 cxxbridge1$str$ptr + 2600376
+12  chromedriver                        0x0000000101037640 cxxbridge1$str$ptr + 2400464
+13  chromedriver                        0x000000010108828c cxxbridge1$str$ptr + 2731292
+14  chromedriver                        0x0000000101088418 cxxbridge1$str$ptr + 2731688
+15  chromedriver                        0x00000001010982d0 cxxbridge1$str$ptr + 2796896
+16  libsystem_pthread.dylib             0x000000019aaeec0c _pthread_start + 136
+17  libsystem_pthread.dylib             0x000000019aae9b80 thread_start + 8
+
+2025-05-14 16:02:54 - INFO - Скриншот сохранен: screenshots/test_search_add_to_cart_checkout_20250514_160253.png
