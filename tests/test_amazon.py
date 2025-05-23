@@ -1,18 +1,15 @@
 import logging
 import pytest
-from examples.amazon.pages import AmazonLoginPage, AmazonHomePage
+from examples.amazon.pages import (
+    AmazonLoginPage,
+    AmazonHomePage,
+    AmazonSearchResultsPage,
+    AmazonProductPage,
+    AmazonCartPage
+)
 
 
-@pytest.fixture
-def amazon_home(driver):
-    """Фикстура для входа в аккаунт Amazon и возврата домашней страницы"""
-    login_page = AmazonLoginPage(driver)
-    login_page.open()
-    home_page = login_page.login("vancous220@gmail.com", "MyStrongPassword")
-    return home_page
-
-
-def test_search_add_to_cart_checkout(amazon_home):
+def test_search_add_to_cart_checkout(page_factory):
     """
     Тест полного цикла покупки:
     1. Вход в аккаунт
@@ -23,7 +20,9 @@ def test_search_add_to_cart_checkout(amazon_home):
     """
     logging.info("=== Начало теста с добавлением элемента в корзину и проверкой стоимости ===")
 
-    home_page = amazon_home
+    login_page = page_factory.create_page(AmazonLoginPage)
+    login_page.open()
+    home_page = login_page.login("vancous220@gmail.com", "MyStrongPassword")
 
     search_results = home_page.header.search("levoit air purifier")
 
