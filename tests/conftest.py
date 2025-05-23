@@ -3,7 +3,7 @@ import logging
 from datetime import datetime
 from pathlib import Path
 
-from page_object_library import DriverFactory, MultiDriverManager
+from page_object_library import DriverFactory, MultiDriverManager, PageFactory, MultiPageFactory
 from page_object_library import setup_logger
 
 
@@ -29,12 +29,20 @@ def driver(setup_logging, request):
 
 
 @pytest.fixture
+def page_factory(driver):
+    """Фикстура для фабрики страниц с одним драйвером"""
+    return PageFactory(driver)
+
+
+@pytest.fixture
 def multi_driver(setup_logging, request):
     """Фикстура для создания менеджера нескольких драйверов"""
     manager = MultiDriverManager()
 
     browser_type = request.config.getoption("--browser", default="chrome")
     headless = request.config.getoption("--headless", default=False)
+
+    # Создаем драйвер по умолчанию
     manager.create_driver("default", browser_type, headless)
 
     request.node.multi_driver = manager
@@ -42,6 +50,12 @@ def multi_driver(setup_logging, request):
     yield manager
 
     manager.close_all_drivers()
+
+
+@pytest.fixture
+def multi_page_factory(multi_driver):
+    """Фикстура для фабрики страниц с несколькими драйверами"""
+    return MultiPageFactory(multi_driver)
 
 
 SCREENSHOTS_DIR = Path("screenshots")

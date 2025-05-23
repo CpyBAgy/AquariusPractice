@@ -8,13 +8,6 @@ from examples.amazon.components import (
 
 
 class AmazonLoginPage(BasePage):
-    EMAIL_INPUT = (By.ID, "ap_email")
-    CONTINUE_BUTTON = (By.ID, "continue")
-    PASSWORD_INPUT = (By.ID, "ap_password")
-    SIGN_IN_BUTTON = (By.ID, "signInSubmit")
-    CHANGE_LINK = (By.ID, "ap_change_login_claim")
-    FORGOT_PASSWORD_LINK = (By.ID, "auth-fpp-link-bottom")
-
 
     def __init__(self, driver, base_url="https://www.amazon.com"):
         super().__init__(driver, base_url)
@@ -22,11 +15,11 @@ class AmazonLoginPage(BasePage):
 
     def _init_elements(self):
         """Инициализирует элементы страницы, используя новый подход"""
-        self.email_input = Input(self, self.EMAIL_INPUT)
-        self.continue_button = Button(self, self.CONTINUE_BUTTON)
-        self.password_input = Input(self, self.PASSWORD_INPUT)
-        self.sign_in_button = Button(self, self.SIGN_IN_BUTTON)
-        self.forgot_password_link = Link(self, self.FORGOT_PASSWORD_LINK)
+        self.email_input = Input(self, (By.ID, "ap_email"), "Поле ввода email")
+        self.continue_button = Button(self, (By.ID, "continue"), "Кнопка продолжить")
+        self.password_input = Input(self, (By.ID, "ap_password"), "Поле ввода пароля")
+        self.sign_in_button = Button(self, (By.ID, "signInSubmit"), "Кнопка входа")
+        self.forgot_password_link = Link(self, (By.ID, "auth-fpp-link-bottom"), "Ссылка забыли пароль")
 
     def login(self, email, password):
         """Выполняет вход в аккаунт используя объектно-ориентированный подход"""
@@ -38,12 +31,6 @@ class AmazonLoginPage(BasePage):
 
 
 class AmazonHomePage(BasePage):
-    SEARCH_INPUT = (By.ID, "twotabsearchtextbox")
-    SEARCH_BUTTON = (By.ID, "nav-search-submit-button")
-    ACCOUNT_MENU = (By.ID, "nav-link-accountList")
-    CART_ICON = (By.ID, "nav-cart")
-    SEARCH_DROPDOWN = (By.ID, "searchDropdownBox")
-    SEARCH_SUGGESTIONS = (By.CSS_SELECTOR, "div.s-suggestion")
 
     def __init__(self, driver, base_url="https://www.amazon.com"):
         super().__init__(driver, base_url)
@@ -53,9 +40,9 @@ class AmazonHomePage(BasePage):
         """Инициализирует компоненты страницы"""
         self.header = HeaderComponent(self)
 
-        self.search_input = Input(self, self.SEARCH_INPUT)
-        self.search_button = Button(self, self.SEARCH_BUTTON)
-        self.cart_icon = BaseElement(self, self.CART_ICON)
+        self.search_input = Input(self, (By.ID, "twotabsearchtextbox"), "Поле поиска")
+        self.search_button = Button(self, (By.ID, "nav-search-submit-button"), "Кнопка поиска")
+        self.cart_icon = BaseElement(self, (By.ID, "nav-cart"), "Иконка корзины")
 
     def search(self, search_text):
         """Выполняет поиск товара через компонент header"""
@@ -70,10 +57,6 @@ class AmazonHomePage(BasePage):
 
 
 class AmazonSearchResultsPage(BasePage):
-    SEARCH_RESULTS = (By.CSS_SELECTOR, "div.s-result-item")
-    PRODUCT_TITLES = (By.CSS_SELECTOR, "span.a-size-medium")
-    SORT_DROPDOWN = (By.CSS_SELECTOR, "span.a-dropdown-label")
-    BEST_SELLER_BADGE = (By.CSS_SELECTOR, "span.a-badge-text")
 
     def __init__(self, driver, base_url="https://www.amazon.com"):
         super().__init__(driver, base_url)
@@ -84,7 +67,7 @@ class AmazonSearchResultsPage(BasePage):
 
     def select_product(self, index=0):
         """Выбирает товар из результатов поиска по индексу"""
-        products = self.find_elements(self.PRODUCT_TITLES)
+        products = self.find_elements((By.CSS_SELECTOR, "span.a-size-medium"))
 
         if len(products) > index:
             products[index].click()
@@ -93,12 +76,6 @@ class AmazonSearchResultsPage(BasePage):
 
 
 class AmazonProductPage(BasePage):
-    PRODUCT_TITLE = (By.ID, "productTitle")
-    PRODUCT_PRICE = (By.CSS_SELECTOR, "span.a-price-whole")
-    ADD_TO_CART_BUTTON = (By.ID, "add-to-cart-button")
-    BUY_NOW_BUTTON = (By.ID, "buy-now-button")
-    PRODUCT_DESCRIPTION = (By.ID, "productDescription")
-    COLOR_OPTIONS = (By.CSS_SELECTOR, "li.swatch-list")
 
     def __init__(self, driver, base_url="https://www.amazon.com"):
         super().__init__(driver, base_url)
@@ -108,7 +85,7 @@ class AmazonProductPage(BasePage):
         self.header = HeaderComponent(self)
         self.product_details = ProductDetailsComponent(self)
 
-        self.add_to_cart_button = Button(self, self.ADD_TO_CART_BUTTON)
+        self.add_to_cart_button = Button(self, (By.ID, "add-to-cart-button"), "Кнопка добавить в корзину")
 
     def get_product_title(self):
         """Получает название товара через компонент product_details"""
@@ -118,6 +95,10 @@ class AmazonProductPage(BasePage):
         """Получает цену товара через компонент product_details"""
         return self.product_details.get_price()
 
+    def get_product_price_as_float(self):
+        """Получает цену товара как float через компонент product_details"""
+        return self.product_details.get_price_as_float()
+
     def add_to_cart(self):
         """Добавляет товар в корзину через кнопку"""
         self.add_to_cart_button.click()
@@ -126,15 +107,6 @@ class AmazonProductPage(BasePage):
 
 
 class AmazonCartPage(BasePage):
-    CART_ITEMS = (By.CSS_SELECTOR, ".sc-list-item")
-    QUANTITY_DROPDOWN = (By.CSS_SELECTOR, "select.a-native-dropdown")
-    QUANTITY_INCREMENT = (By.CSS_SELECTOR, "input.a-button-input[data-action='increase-quantity']")
-    QUANTITY_DECREMENT = (By.CSS_SELECTOR, "input.a-button-input[data-action='decrease-quantity']")
-    QUANTITY_TEXTBOX = (By.CSS_SELECTOR, "input.sc-quantity-textfield")
-    DELETE_BUTTON = (By.CSS_SELECTOR, "input[value='Delete']")
-    PROCEED_TO_CHECKOUT = (By.CSS_SELECTOR, "input[name='proceedToRetailCheckout']")
-    SUBTOTAL = (By.CSS_SELECTOR, "#sc-subtotal-amount-activecart > span")
-    SAVE_FOR_LATER = (By.CSS_SELECTOR, "input[value='Save for later']")
 
     def __init__(self, driver, base_url="https://www.amazon.com"):
         super().__init__(driver, base_url)
@@ -144,12 +116,20 @@ class AmazonCartPage(BasePage):
         """Инициализирует компоненты страницы"""
         self.header = HeaderComponent(self)
 
-        self.proceed_to_checkout = Button(self, self.PROCEED_TO_CHECKOUT)
-        self.subtotal = BaseElement(self, self.SUBTOTAL)
+        self.proceed_to_checkout = Button(
+            self,
+            (By.CSS_SELECTOR, "input[name='proceedToRetailCheckout']"),
+            "Кнопка перейти к оформлению"
+        )
+        self.subtotal = BaseElement(
+            self,
+            (By.CSS_SELECTOR, "#sc-subtotal-amount-activecart > span"),
+            "Промежуточная сумма"
+        )
 
     def get_cart_items(self):
         """Получает список компонентов элементов корзины"""
-        items = self.find_elements(self.CART_ITEMS)
+        items = self.find_elements((By.CSS_SELECTOR, ".sc-list-item"))
 
         from examples.amazon.components import CartItemComponent
         return [CartItemComponent(self, item.element) for item in items]
@@ -162,14 +142,46 @@ class AmazonCartPage(BasePage):
         """Получает общую сумму заказа"""
         return self.subtotal.get_text()
 
-    def proceed_to_checkout(self):
+    def get_subtotal_as_float(self):
+        """Получает общую сумму заказа как float"""
+        subtotal_text = self.get_subtotal()
+        from examples.amazon.components import ProductDetailsComponent
+        return ProductDetailsComponent.parse_price_to_float(subtotal_text)
+
+    def go_to_checkout(self):
         """Переходит к оформлению заказа"""
         self.proceed_to_checkout.click()
         return self.navigate_to(AmazonCheckoutPage)
 
 class AmazonCheckoutPage(BasePage):
-    DELIVERY_ADDRESS = (By.CSS_SELECTOR, ".ship-to-this-address a")
-    ADD_NEW_ADDRESS = (By.CSS_SELECTOR, "a#add-new-address-popover-link")
-    PAYMENT_METHOD = (By.CSS_SELECTOR, "#payment-method")
-    ORDER_TOTAL = (By.CSS_SELECTOR, ".grand-total-price")
-    PLACE_ORDER_BUTTON = (By.CSS_SELECTOR, "#placeYourOrder")
+
+    def __init__(self, driver, base_url="https://www.amazon.com"):
+        super().__init__(driver, base_url)
+
+    def _init_elements(self):
+        """Инициализирует элементы страницы"""
+        self.delivery_address = BaseElement(
+            self,
+            (By.CSS_SELECTOR, ".ship-to-this-address a"),
+            "Адрес доставки"
+        )
+        self.add_new_address = BaseElement(
+            self,
+            (By.CSS_SELECTOR, "a#add-new-address-popover-link"),
+            "Добавить новый адрес"
+        )
+        self.payment_method = BaseElement(
+            self,
+            (By.CSS_SELECTOR, "#payment-method"),
+            "Способ оплаты"
+        )
+        self.order_total = BaseElement(
+            self,
+            (By.CSS_SELECTOR, ".grand-total-price"),
+            "Общая сумма заказа"
+        )
+        self.place_order_button = Button(
+            self,
+            (By.CSS_SELECTOR, "#placeYourOrder"),
+            "Кнопка разместить заказ"
+        )
