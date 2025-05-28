@@ -16,8 +16,9 @@ class BasePage(metaclass=LocatorMeta):
     """Базовый класс для всех страниц"""
     DEFAULT_URL = None  # Переопределяется в подклассах
 
-    def __init__(self, driver, url=None, timeout=10):
+    def __init__(self, driver, url=None, timeout=10, driver_name="default"):
         self.driver = driver  # Драйвер Selenium
+        self.driver_name = driver_name  # Имя драйвера для логгирования
         self.url = url or self.DEFAULT_URL  # URL страницы (по умолчанию None)
         self.page_name = self.__class__.__name__  # Имя страницы (класса)
         self.wait = WebDriverWait(driver, timeout)  # Ожидание для поиска элементов
@@ -87,7 +88,7 @@ class BasePage(metaclass=LocatorMeta):
         Автоматически открывает страницу, если у неё задан URL.
         Возвращает типизированный объект страницы.
         """
-        new_page = page_class(self.driver)
+        new_page = page_class(self.driver, driver_name=self.driver_name)
 
         new_page.open()
 

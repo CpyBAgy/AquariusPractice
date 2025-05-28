@@ -128,7 +128,11 @@ def auto_log(func: Callable) -> Callable:
 
         obj = args[0]
 
-        driver_id = id(obj.driver) if hasattr(obj, 'driver') else 'unknown'
+        # Получаем имя драйвера вместо ID
+        if hasattr(obj, 'driver_name'):
+            driver_identifier = obj.driver_name
+        else:
+            driver_identifier = f"#{id(obj.driver)}" if hasattr(obj, 'driver') else 'unknown'
 
         if hasattr(obj, 'page_name'):
             object_name = obj.page_name
@@ -166,7 +170,7 @@ def auto_log(func: Callable) -> Callable:
             else:
                 params.append(f"{name}={formatted_value}")
 
-        prefix = f"[Driver {driver_id}] {object_name}"
+        prefix = f"[Driver {driver_identifier}] {object_name}"
 
         # Используем описание элемента, если оно есть
         if element_description and method_name in ["click", "type", "get_text", "is_visible", "is_present"]:
