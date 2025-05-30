@@ -29,10 +29,6 @@ class AmazonLoginPage(BasePage):
 
 class AmazonHomePage(BasePage):
 
-    def __init__(self, driver, base_url="https://www.amazon.com", driver_name="default"):
-        super().__init__(driver, base_url, driver_name=driver_name)
-        self.url = base_url
-
     def _init_elements(self):
         """Инициализирует компоненты страницы"""
         self.header = HeaderComponent(self)
@@ -55,9 +51,6 @@ class AmazonHomePage(BasePage):
 
 class AmazonSearchResultsPage(BasePage):
 
-    def __init__(self, driver, base_url="https://www.amazon.com", driver_name="default"):
-        super().__init__(driver, base_url, driver_name=driver_name)
-
     def _init_elements(self):
         """Инициализирует компоненты страницы"""
         self.header = HeaderComponent(self)
@@ -73,9 +66,6 @@ class AmazonSearchResultsPage(BasePage):
 
 
 class AmazonProductPage(BasePage):
-
-    def __init__(self, driver, base_url="https://www.amazon.com", driver_name="default"):
-        super().__init__(driver, base_url, driver_name=driver_name)
 
     def _init_elements(self):
         """Инициализирует компоненты страницы"""
@@ -148,9 +138,6 @@ class AmazonCartPage(BasePage):
         return self.navigate_to(AmazonCheckoutPage)
 
 class AmazonCheckoutPage(BasePage):
-
-    def __init__(self, driver, base_url="https://www.amazon.com", driver_name="default"):
-        super().__init__(driver, base_url, driver_name=driver_name)
 
     def _init_elements(self):
         """Инициализирует элементы страницы"""
