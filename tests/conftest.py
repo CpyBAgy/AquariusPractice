@@ -17,12 +17,22 @@ def pytest_addoption(parser):
         "--headless-mode", action="store_true", default=False,
         help="Запускать браузер в headless режиме"
     )
+    parser.addoption(
+        "--base-url", action="store", default="https://www.amazon.com",
+        help="Базовый URL для тестирования"
+    )
 
 
 @pytest.fixture(scope="session")
 def setup_logging():
     """Настройка логирования на уровне сессии"""
     return setup_logger()
+
+
+@pytest.fixture(scope="session")
+def base_url(request):
+    """Фикстура для получения базового URL из командной строки"""
+    return request.config.getoption("--base-url")
 
 
 @pytest.fixture
@@ -41,9 +51,9 @@ def driver(setup_logging, request):
 
 
 @pytest.fixture
-def page_factory(driver):
-    """Фикстура для фабрики страниц с одним драйвером"""
-    return PageFactory(driver, driver_name="default")
+def page_factory(driver, base_url):
+    """Фикстура для фабрики страниц с одним драйвером и базовым URL"""
+    return PageFactory(driver, base_url=base_url, driver_name="default")
 
 
 @pytest.fixture
@@ -65,11 +75,16 @@ def multi_driver(setup_logging, request):
 
 
 @pytest.fixture
-def multi_page_factory(multi_driver, request):
-    """Фикстура для фабрики страниц с несколькими драйверами"""
+def multi_page_factory(multi_driver, base_url, request):
+    """Фикстура для фабрики страниц с несколькими драйверами и базовым URL"""
     browser_type = request.config.getoption("--browser-type", default="chrome")
     headless = request.config.getoption("--headless-mode", default=False)
-    return MultiPageFactory(multi_driver, browser_type, headless)
+    return MultiPageFactory(
+        multi_driver,
+        default_browser_type=browser_type,
+        default_headless=headless,
+        default_base_url=base_url
+    )
 
 
 SCREENSHOTS_DIR = Path("screenshots")
