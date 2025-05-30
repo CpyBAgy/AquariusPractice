@@ -10,10 +10,12 @@ from page_object_library.utils.decorators import auto_log
 class BaseElement:
     """Базовый класс для элементов страницы"""
 
-    def __init__(self, page, locator, element=None):
+    def __init__(self, page, locator, description=None, element=None):
         self.page = page
         self.driver = page.driver
+        self.driver_name = getattr(page, 'driver_name', 'unknown')  # Получаем имя драйвера от страницы
         self.locator = locator
+        self.description = description
         self._element = element  # Можно передать уже найденный элемент
         self.wait = WebDriverWait(self.driver, 10)
 
@@ -75,6 +77,9 @@ class BaseElement:
 class Button(BaseElement):
     """Кнопка"""
 
+    def __init__(self, page, locator, description=None, parent_element=None):
+        super().__init__(page, locator, description, parent_element)
+
     @auto_log
     def is_enabled(self):
         """Проверяет, активна ли кнопка"""
@@ -83,6 +88,9 @@ class Button(BaseElement):
 
 class Input(BaseElement):
     """Поле ввода"""
+
+    def __init__(self, page, locator, description=None, element=None):
+        super().__init__(page, locator, description, element)
 
     @auto_log
     def type(self, text):
@@ -109,6 +117,9 @@ class Input(BaseElement):
 class Checkbox(BaseElement):
     """Чекбокс"""
 
+    def __init__(self, page, locator, description=None, element=None):
+        super().__init__(page, locator, description, element)
+
     @auto_log
     def check(self):
         """Отмечает чекбокс"""
@@ -132,6 +143,9 @@ class Checkbox(BaseElement):
 class Radio(BaseElement):
     """Радиокнопка"""
 
+    def __init__(self, page, locator, description=None, element=None):
+        super().__init__(page, locator, description, element)
+
     @auto_log
     def select(self):
         """Выбирает радиокнопку"""
@@ -147,6 +161,9 @@ class Radio(BaseElement):
 
 class Dropdown(BaseElement):
     """Выпадающий список"""
+
+    def __init__(self, page, locator, description=None, element=None):
+        super().__init__(page, locator, description, element)
 
     @auto_log
     def select_by_text(self, text):
@@ -172,6 +189,9 @@ class Dropdown(BaseElement):
 class Link(BaseElement):
     """Ссылка"""
 
+    def __init__(self, page, locator, description=None, element=None):
+        super().__init__(page, locator, description, element)
+
     @auto_log
     def get_url(self):
         """Получает URL ссылки"""
@@ -190,18 +210,6 @@ class ElementGroup(metaclass=LocatorMeta):
         """
         self.page = page
         self.driver = page.driver
+        self.driver_name = getattr(page, 'driver_name', 'unknown')  # Получаем имя драйвера от страницы
         self.wait = WebDriverWait(self.driver, timeout)
-        self.group_name = self.__class__.__name__
-        self._init_elements()
-
-    def _init_elements(self):
-        """
-        Инициализирует элементы группы.
-        Переопределяется в подклассах для создания элементов.
-        """
-        pass
-
-    @auto_log
-    def wait_for_page_loaded(self):
-        """Ожидание загрузки страницы"""
-        return self.page.wait_for_page_loaded()
+        self.group_name = self.__

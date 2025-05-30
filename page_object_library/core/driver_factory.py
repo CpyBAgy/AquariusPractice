@@ -63,6 +63,15 @@ class MultiDriverManager:
             raise ValueError(f"Драйвер с именем '{name}' не существует")
         return self.drivers[name]
 
+    def get_or_create_driver(self, name="default", browser_type="chrome", headless=False, options=None):
+        """Получает существующий драйвер или создает новый"""
+        if name in self.drivers:
+            logging.info(f"Используем существующий драйвер '{name}'")
+            return self.drivers[name]
+        else:
+            logging.info(f"Создаем новый драйвер '{name}'")
+            return self.create_driver(name, browser_type, headless, options)
+
     def switch_to_driver(self, name):
         """Переключается на другой драйвер"""
         if name not in self.drivers:

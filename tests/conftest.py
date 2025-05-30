@@ -3,8 +3,20 @@ import logging
 from datetime import datetime
 from pathlib import Path
 
-from page_object_library import DriverFactory, MultiDriverManager
+from page_object_library import DriverFactory, MultiDriverManager, PageFactory, MultiPageFactory
 from page_object_library import setup_logger
+
+
+def pytest_addoption(parser):
+    """Добавляем опции командной строки"""
+    parser.addoption(
+        "--browser-type", action="store", default="chrome",
+        help="Тип браузера: chrome или firefox"
+    )
+    parser.addoption(
+        "--headless-mode", action="store_true", default=False,
+        help="Запускать браузер в headless режиме"
+    )
 
 
 @pytest.fixture(scope="session")
@@ -16,8 +28,8 @@ def setup_logging():
 @pytest.fixture
 def driver(setup_logging, request):
     """Фикстура для создания одиночного драйвера"""
-    browser_type = request.config.getoption("--browser", default="chrome")
-    headless = request.config.getoption("--headless", default=False)
+    browser_type = request.config.getoption("--browser-type", default="chrome")
+    headless = request.config.getoption("--headless-mode", default=False)
 
     driver = DriverFactory.create_driver(browser_type, headless)
 
@@ -29,12 +41,20 @@ def driver(setup_logging, request):
 
 
 @pytest.fixture
+def page_factory(driver):
+    """Фикстура для фабрики страниц с одним драйвером"""
+    return PageFactory(driver, driver_name="default")
+
+
+@pytest.fixture
 def multi_driver(setup_logging, request):
     """Фикстура для создания менеджера нескольких драйверов"""
     manager = MultiDriverManager()
 
-    browser_type = request.config.getoption("--browser", default="chrome")
-    headless = request.config.getoption("--headless", default=False)
+    browser_type = request.config.getoption("--browser-type", default="chrome")
+    headless = request.config.getoption("--headless-mode", default=False)
+
+    # Создаем драйвер по умолчанию
     manager.create_driver("default", browser_type, headless)
 
     request.node.multi_driver = manager
@@ -42,6 +62,14 @@ def multi_driver(setup_logging, request):
     yield manager
 
     manager.close_all_drivers()
+
+
+@pytest.fixture
+def multi_page_factory(multi_driver, request):
+    """Фикстура для фабрики страниц с несколькими драйверами"""
+    browser_type = request.config.getoption("--browser-type", default="chrome")
+    headless = request.config.getoption("--headless-mode", default=False)
+    return MultiPageFactory(multi_driver, browser_type, headless)
 
 
 SCREENSHOTS_DIR = Path("screenshots")

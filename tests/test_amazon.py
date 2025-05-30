@@ -1,17 +1,15 @@
 import logging
 import pytest
-from examples.amazon.pages import AmazonLoginPage
+from examples.amazon.pages import (
+    AmazonLoginPage,
+    AmazonHomePage,
+    AmazonSearchResultsPage,
+    AmazonProductPage,
+    AmazonCartPage
+)
 
 
-@pytest.fixture
-def amazon_login(driver):
-    """Фикстура для входа в аккаунт Amazon"""
-    login_page = AmazonLoginPage(driver)
-    login_page.open()
-    return login_page.login("vancous220@gmail.com", "MyStrongPassword")
-
-
-def test_search_add_to_cart_checkout(amazon_login):
+def test_search_add_to_cart_checkout(page_factory):
     """
     Тест полного цикла покупки:
     1. Вход в аккаунт
@@ -22,14 +20,16 @@ def test_search_add_to_cart_checkout(amazon_login):
     """
     logging.info("=== Начало теста с добавлением элемента в корзину и проверкой стоимости ===")
 
-    home_page = amazon_login
+    login_page = page_factory.create_page(AmazonLoginPage)
+    login_page.open()
+    home_page = login_page.login("vancous220@gmail.com", "MyStrongPassword")
 
     search_results = home_page.header.search("levoit air purifier")
 
     product_page = search_results.select_product(0)
 
-    product_price_text = product_page.get_product_price()
-    product_price = float(product_price_text.replace("$", "").replace(",", ""))  # $12,123,132 -> 12123132.0
+    # Используем новый метод для получения цены как float
+    product_price = product_page.get_product_price_as_float()
 
     product_page.add_to_cart()
 
@@ -40,8 +40,8 @@ def test_search_add_to_cart_checkout(amazon_login):
 
     cart_items[0].increase_quantity()  # Увеличиваем количество товара на 1
 
-    cart_subtotal_text = cart_page.get_subtotal()
-    cart_subtotal = float(cart_subtotal_text.replace("$", "").replace(",", ""))  # $12,123,132 -> 12123132.0
+    # Используем новый метод для получения суммы как float
+    cart_subtotal = cart_page.get_subtotal_as_float()
 
     expected_subtotal = product_price * 2
     assert abs(cart_subtotal - expected_subtotal) < 0.01, \

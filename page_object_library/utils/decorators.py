@@ -72,19 +72,38 @@ def get_method_description(method_name: str) -> str:
 
 def format_param_value(name: str, value: Any) -> str:
     """Форматирует значение параметра для логирования"""
+    # Если это локатор из Locator dataclass
     if hasattr(value, 'description') and isinstance(value, Locator):
         return f"{value.description}"
+
+    # Если это кортеж локатора
+    if isinstance(value, tuple) and len(value) == 2:
+        # Пытаемся определить тип элемента по локатору
+        locator_type, locator_value = value
+        if isinstance(locator_value, str):
+            if 'button' in locator_value.lower() or 'btn' in locator_value.lower():
+                return f"кнопка ({locator_type}: {locator_value})"
+            elif 'input' in locator_value.lower() or 'field' in locator_value.lower():
+                return f"поле ввода ({locator_type}: {locator_value})"
+            else:
+                return f"элемент ({locator_type}: {locator_value})"
+        return f"элемент {value}"
 
     if isinstance(value, str):
         if name == "text" or name == "search_text":
             return f'"{value[:20]}{"..." if len(value) > 20 else ""}"'
+        elif name == "description":
+            return None  # Не выводим description как параметр
         elif len(value) > 40:
             return f'"{value[:37]}..."'
         else:
             return f'"{value}"'
 
     if hasattr(value, '__class__') and hasattr(value, 'locator') and hasattr(value, 'page'):
-        if hasattr(value.locator, 'description'):
+        # Это объект элемента
+        if hasattr(value, 'description') and value.description:
+            return f"{value.description}"
+        elif hasattr(value.locator, 'description'):
             return f"{value.locator.description}"
         else:
             return f"элемент {value.__class__.__name__}"
@@ -109,7 +128,11 @@ def auto_log(func: Callable) -> Callable:
 
         obj = args[0]
 
-        driver_id = id(obj.driver) if hasattr(obj, 'driver') else 'unknown'
+        # Получаем имя драйвера вместо ID
+        if hasattr(obj, 'driver_name'):
+            driver_identifier = obj.driver_name
+        else:
+            driver_identifier = f"#{id(obj.driver)}" if hasattr(obj, 'driver') else 'unknown'
 
         if hasattr(obj, 'page_name'):
             object_name = obj.page_name
@@ -125,8 +148,18 @@ def auto_log(func: Callable) -> Callable:
         bound_args.apply_defaults()
 
         params = []
+        element_description = None
+
+        # Проверяем, есть ли у самого объекта описание (для BaseElement и его наследников)
+        if hasattr(obj, 'description') and obj.description:
+            element_description = obj.description
+
         for name, value in list(bound_args.arguments.items())[1:]:
+            if name == "description":
+                continue  # Пропускаем параметр description
             formatted_value = format_param_value(name, value)
+            if formatted_value is None:
+                continue
             if name == "locator" or name == "element_type" or name == "multiple":
                 if name == "locator" and formatted_value:
                     params.append(f"{formatted_value}")
@@ -137,8 +170,13 @@ def auto_log(func: Callable) -> Callable:
             else:
                 params.append(f"{name}={formatted_value}")
 
-        prefix = f"[Driver {driver_id}] {object_name}"
-        action = f"{action_description}"
+        prefix = f"[Driver {driver_identifier}] {object_name}"
+
+        # Используем описание элемента, если оно есть
+        if element_description and method_name in ["click", "type", "get_text", "is_visible", "is_present"]:
+            action = f"{action_description} - {element_description}"
+        else:
+            action = f"{action_description}"
 
         if params:
             log_message = f"{prefix}: {action} ({', '.join(params)})"

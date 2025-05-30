@@ -5,15 +5,13 @@ from page_object_library import ElementGroup, auto_log, Input, Button, BaseEleme
 
 class SearchSuggestionComponent(ElementGroup):
     """Компонент выпадающих подсказок при поиске"""
-    SUGGESTION_ITEM = (By.CSS_SELECTOR, "div.s-suggestion")
 
     def __init__(self, page):
         super().__init__(page)
 
     def _init_elements(self):
         """Инициализирует элементы компонента"""
-        self.suggestion_list = self.page.find_elements(self.SUGGESTION_ITEM)
-        pass
+        self.suggestion_list = self.page.find_elements((By.CSS_SELECTOR, "div.s-suggestion"))
 
     @auto_log
     def select_suggestion(self, index=0):
@@ -27,12 +25,6 @@ class SearchSuggestionComponent(ElementGroup):
 
 class HeaderComponent(ElementGroup):
     """Компонент верхнего меню Amazon"""
-    NAVBAR = (By.ID, "navbar")
-    SEARCH_INPUT = (By.ID, "twotabsearchtextbox")
-    SEARCH_BUTTON = (By.ID, "nav-search-submit-button")
-    ACCOUNT_MENU = (By.ID, "nav-link-accountList")
-    CART_ICON = (By.ID, "nav-cart")
-    ORDERS_LINK = (By.ID, "nav-orders")
 
     def __init__(self, page):
         self.page = page
@@ -40,11 +32,11 @@ class HeaderComponent(ElementGroup):
 
     def _init_elements(self):
         """Инициализирует элементы компонента"""
-        self.search_input = Input(self.page, self.SEARCH_INPUT)
-        self.search_button = Button(self.page, self.SEARCH_BUTTON)
-        self.account_menu = BaseElement(self.page, self.ACCOUNT_MENU)
-        self.cart_icon = BaseElement(self.page, self.CART_ICON)
-        self.orders_link = Link(self.page, self.ORDERS_LINK)
+        self.search_input = Input(self.page, (By.ID, "twotabsearchtextbox"), "Поле поиска")
+        self.search_button = Button(self.page, (By.ID, "nav-search-submit-button"), "Кнопка поиска")
+        self.account_menu = BaseElement(self.page, (By.ID, "nav-link-accountList"), "Меню аккаунта")
+        self.cart_icon = BaseElement(self.page, (By.ID, "nav-cart"), "Иконка корзины")
+        self.orders_link = Link(self.page, (By.ID, "nav-orders"), "Ссылка на заказы")
 
     @auto_log
     def search(self, search_text):
@@ -70,12 +62,6 @@ class HeaderComponent(ElementGroup):
 
 class CartItemComponent(ElementGroup):
     """Компонент элемента корзины"""
-    INCREMENT_BUTTON = (By.CSS_SELECTOR, "input[data-action='increase-quantity']")
-    DECREMENT_BUTTON = (By.CSS_SELECTOR, "input[data-action='decrease-quantity']")
-    DELETE_BUTTON = (By.CSS_SELECTOR, "input[value='Delete']")
-    QUANTITY_FIELD = (By.CSS_SELECTOR, "input.sc-quantity-textfield")
-    PRODUCT_TITLE = (By.CSS_SELECTOR, "span.a-truncate-cut")
-    PRODUCT_PRICE = (By.CSS_SELECTOR, "span.sc-price")
 
     def __init__(self, page, item_element):
         self.item_element = item_element
@@ -83,25 +69,24 @@ class CartItemComponent(ElementGroup):
 
     def _init_elements(self):
         """Инициализирует элементы компонента"""
-        self.increment_button = Button(self.page, self.INCREMENT_BUTTON, self.item_element)
-        self.decrement_button = Button(self.page, self.DECREMENT_BUTTON, self.item_element)
-        self.delete_button = Button(self.page, self.DELETE_BUTTON, self.item_element)
-        pass
-
-    @auto_log
-    def increment_button(self):
-        """Возвращает кнопку увеличения количества"""
-        return self.increment_button
-
-    @auto_log
-    def decrement_button(self):
-        """Возвращает кнопку уменьшения количества"""
-        return self.decrement_button
-
-    @auto_log
-    def delete_button(self):
-        """Возвращает кнопку удаления"""
-        return self.delete_button
+        self.increment_button = Button(
+            self.page,
+            (By.CSS_SELECTOR, "input[data-action='increase-quantity']"),
+            "Кнопка увеличения количества",
+            self.item_element
+        )
+        self.decrement_button = Button(
+            self.page,
+            (By.CSS_SELECTOR, "input[data-action='decrease-quantity']"),
+            "Кнопка уменьшения количества",
+            self.item_element
+        )
+        self.delete_button = Button(
+            self.page,
+            (By.CSS_SELECTOR, "input[value='Delete']"),
+            "Кнопка удаления",
+            self.item_element
+        )
 
     @auto_log
     def increase_quantity(self):
@@ -127,42 +112,54 @@ class CartItemComponent(ElementGroup):
     @auto_log
     def get_title(self):
         """Получает название товара"""
-        title_element = self.page.find_element(self.PRODUCT_TITLE)
+        title_element = self.page.find_element((By.CSS_SELECTOR, "span.a-truncate-cut"))
         return title_element.get_text()
 
     @auto_log
     def get_price(self):
         """Получает цену товара"""
-        price_element = self.page.find_element(self.PRODUCT_PRICE)
+        price_element = self.page.find_element((By.CSS_SELECTOR, "span.sc-price"))
         return price_element.get_text().strip()
 
 
 class ProductDetailsComponent(ElementGroup):
     """Компонент деталей товара"""
-    PRODUCT_CONTAINER = (By.ID, "ppd")
-    PRODUCT_TITLE = (By.ID, "productTitle")
-    PRODUCT_PRICE_WHOLE = (By.CSS_SELECTOR, "span.a-price .a-price-whole")
-    PRODUCT_PRICE_FRACTION = (By.CSS_SELECTOR, "span.a-price .a-price-fraction")
-    ADD_TO_CART_BUTTON = (By.ID, "add-to-cart-button")
-    BUY_NOW_BUTTON = (By.ID, "buy-now-button")
-    ALT_PRICE = (By.CSS_SELECTOR, ".a-price .a-offscreen")
-    PRICE_BLOCK = (By.CSS_SELECTOR, "#priceblock_ourprice, #price_inside_buybox")
 
     def __init__(self, page):
         super().__init__(page)
 
     def _init_elements(self):
         """Инициализирует элементы компонента"""
-        self.price_whole = BaseElement(self.page, self.PRODUCT_PRICE_WHOLE)
-        self.price_fraction = BaseElement(self.page, self.PRODUCT_PRICE_FRACTION)
-        self.alt_price = BaseElement(self.page, self.ALT_PRICE)
-        self.price_block = BaseElement(self.page, self.PRICE_BLOCK)
-        self.add_to_cart_button = Button(self.page, self.ADD_TO_CART_BUTTON)
+        self.price_whole = BaseElement(
+            self.page,
+            (By.CSS_SELECTOR, "span.a-price .a-price-whole"),
+            "Целая часть цены"
+        )
+        self.price_fraction = BaseElement(
+            self.page,
+            (By.CSS_SELECTOR, "span.a-price .a-price-fraction"),
+            "Дробная часть цены"
+        )
+        self.alt_price = BaseElement(
+            self.page,
+            (By.CSS_SELECTOR, ".a-price .a-offscreen"),
+            "Альтернативная цена"
+        )
+        self.price_block = BaseElement(
+            self.page,
+            (By.CSS_SELECTOR, "#priceblock_ourprice, #price_inside_buybox"),
+            "Блок цены"
+        )
+        self.add_to_cart_button = Button(
+            self.page,
+            (By.ID, "add-to-cart-button"),
+            "Кнопка добавления в корзину"
+        )
 
     @auto_log
     def get_title(self):
         """Получает название товара"""
-        title_element = self.page.find_element(self.PRODUCT_TITLE)
+        title_element = self.page.find_element((By.ID, "productTitle"))
         return title_element.get_text()
 
     @auto_log
@@ -181,6 +178,25 @@ class ProductDetailsComponent(ElementGroup):
                     return self.price_block.get_text().replace("$", "").strip()
                 except:
                     raise Exception("Не удалось найти цену товара на странице")
+
+    @auto_log
+    def get_price_as_float(self):
+        """Получает цену товара как число с плавающей точкой"""
+        price_text = self.get_price()
+        return self.parse_price_to_float(price_text)
+
+    @staticmethod
+    def parse_price_to_float(price_text):
+        """Преобразует текстовое представление цены в float
+
+        Args:
+            price_text: Строка с ценой, например "$12,123.45" или "12,123.45"
+
+        Returns:
+            float: Числовое значение цены
+        """
+        clean_price = price_text.replace("$", "").replace(",", "").strip()
+        return float(clean_price)
 
     @auto_log
     def add_to_cart(self):
