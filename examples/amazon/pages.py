@@ -8,10 +8,7 @@ from examples.amazon.components import (
 
 
 class AmazonLoginPage(BasePage):
-
-    def __init__(self, driver, base_url="https://www.amazon.com", driver_name="default"):
-        super().__init__(driver, base_url, driver_name=driver_name)
-        self.url = "https://www.amazon.com/ap/signin?openid.pape.max_auth_age=0&openid.return_to=https%3A%2F%2Fwww.amazon.com%2F%3Fref_%3Dnav_signin&openid.identity=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0%2Fidentifier_select&openid.assoc_handle=usflex&openid.mode=checkid_setup&openid.claimed_id=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0%2Fidentifier_select&openid.ns=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0"
+    DEFAULT_URL = "/ap/signin?openid.pape.max_auth_age=0&openid.return_to={base_url}%2F%3Fref_%3Dnav_signin&openid.identity=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0%2Fidentifier_select&openid.assoc_handle=usflex&openid.mode=checkid_setup&openid.claimed_id=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0%2Fidentifier_select&openid.ns=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0"
 
     def _init_elements(self):
         """Инициализирует элементы страницы, используя новый подход"""
@@ -107,10 +104,7 @@ class AmazonProductPage(BasePage):
 
 
 class AmazonCartPage(BasePage):
-
-    def __init__(self, driver, base_url="https://www.amazon.com", driver_name="default"):
-        super().__init__(driver, base_url, driver_name=driver_name)
-        self.url = f"{base_url}/gp/cart/view.html"
+    DEFAULT_URL = "/gp/cart/view.html"
 
     def _init_elements(self):
         """Инициализирует компоненты страницы"""

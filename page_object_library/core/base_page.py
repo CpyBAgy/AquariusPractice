@@ -7,7 +7,6 @@ from page_object_library.core.locator import LocatorMeta
 from page_object_library.utils.decorators import auto_log
 from page_object_library.core.component import BaseElement
 
-
 T = TypeVar('T', bound='BasePage')
 E = TypeVar('E', bound='BaseElement')
 
@@ -16,13 +15,21 @@ class BasePage(metaclass=LocatorMeta):
     """Базовый класс для всех страниц"""
     DEFAULT_URL = None  # Переопределяется в подклассах
 
-    def __init__(self, driver, url=None, timeout=10, driver_name="default"):
+    def __init__(self, driver, base_url=None, timeout=10, driver_name="default"):
         self.driver = driver  # Драйвер Selenium
         self.driver_name = driver_name  # Имя драйвера для логгирования
-        self.url = url or self.DEFAULT_URL  # URL страницы (по умолчанию None)
+        self.base_url = base_url or "https://www.amazon.com"  # Базовый URL по умолчанию
         self.page_name = self.__class__.__name__  # Имя страницы (класса)
         self.wait = WebDriverWait(driver, timeout)  # Ожидание для поиска элементов
+        self.url = self._build_url()  # Логика определения URL страницы
         self._init_elements()  # Инициализация элементов страницы
+
+    def _build_url(self):
+        """Строит URL страницы на основе приоритетов"""
+        if self.DEFAULT_URL:
+            return f"{self.base_url}{self.DEFAULT_URL}"
+
+        return self.base_url
 
     def _init_elements(self):
         """Инициализирует элементы на странице.
@@ -88,9 +95,10 @@ class BasePage(metaclass=LocatorMeta):
         Автоматически открывает страницу, если у неё задан URL.
         Возвращает типизированный объект страницы.
         """
-        new_page = page_class(self.driver, driver_name=self.driver_name)
+        new_page = page_class(self.driver, base_url=self.base_url, driver_name=self.driver_name)
 
-        new_page.open()
+        if new_page.url:
+            new_page.open()
 
         return new_page
 
