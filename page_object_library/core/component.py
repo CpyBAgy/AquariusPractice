@@ -212,4 +212,17 @@ class ElementGroup(metaclass=LocatorMeta):
         self.driver = page.driver
         self.driver_name = getattr(page, 'driver_name', 'unknown')  # Получаем имя драйвера от страницы
         self.wait = WebDriverWait(self.driver, timeout)
-        self.group_name = self.__
+        self.group_name = self.__class__.__name__
+        self._init_elements()
+
+    def _init_elements(self):
+        """
+        Инициализирует элементы группы.
+        Переопределяется в подклассах для создания элементов.
+        """
+        pass
+
+    @auto_log
+    def wait_for_page_loaded(self):
+        """Ожидание загрузки страницы"""
+        return self.page.wait_for_page_loaded()

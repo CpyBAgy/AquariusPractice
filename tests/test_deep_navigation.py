@@ -41,7 +41,7 @@ def test_regular_deep_navigation_full_path(page_factory):
     login_page = page_factory.create_page(AmazonLoginPage)
     login_page.open()
 
-    home_page = login_page.navigate_to(AmazonHomePage)
+    home_page = login_page.login("vancous220@gmail.com", "MyStrongPassword")
     logging.info("✅ Переход: Login → Home")
 
     account_page = home_page.go_to_account()
