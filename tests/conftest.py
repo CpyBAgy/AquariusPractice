@@ -21,6 +21,10 @@ def pytest_addoption(parser):
         "--base-url", action="store", default="https://www.amazon.com",
         help="Базовый URL для тестирования"
     )
+    parser.addoption(
+        "--target-version", action="store", default=None,
+        help="Целевая версия страниц для тестирования: v1, v2"
+    )
 
 
 @pytest.fixture(scope="session")
@@ -33,6 +37,12 @@ def setup_logging():
 def base_url(request):
     """Фикстура для получения базового URL из командной строки"""
     return request.config.getoption("--base-url")
+
+
+@pytest.fixture(scope="session")
+def target_version(request):
+    """Фикстура для получения целевой версии страниц из командной строки"""
+    return request.config.getoption("--target-version")
 
 
 @pytest.fixture
@@ -51,9 +61,9 @@ def driver(setup_logging, request):
 
 
 @pytest.fixture
-def page_factory(driver, base_url):
-    """Фикстура для фабрики страниц с одним драйвером и базовым URL"""
-    return PageFactory(driver, base_url=base_url, driver_name="default")
+def page_factory(driver, base_url, target_version):
+    """Фикстура для фабрики страниц с одним драйвером, базовым URL и целевой версией"""
+    return PageFactory(driver, base_url=base_url, driver_name="default", target_version=target_version)
 
 
 @pytest.fixture
@@ -75,15 +85,56 @@ def multi_driver(setup_logging, request):
 
 
 @pytest.fixture
-def multi_page_factory(multi_driver, base_url, request):
-    """Фикстура для фабрики страниц с несколькими драйверами и базовым URL"""
+def multi_page_factory(multi_driver, base_url, target_version, request):
+    """Фикстура для фабрики страниц с несколькими драйверами, базовым URL и целевой версией"""
     browser_type = request.config.getoption("--browser-type", default="chrome")
     headless = request.config.getoption("--headless-mode", default=False)
     return MultiPageFactory(
         multi_driver,
         default_browser_type=browser_type,
         default_headless=headless,
-        default_base_url=base_url
+        default_base_url=base_url,
+        default_target_version=target_version
+    )
+
+
+@pytest.fixture
+def page_factory_v1(driver, base_url):
+    """Фикстура для фабрики страниц версии 1"""
+    return PageFactory(driver, base_url=base_url, driver_name="default", target_version="v1")
+
+
+@pytest.fixture
+def page_factory_v2(driver, base_url):
+    """Фикстура для фабрики страниц версии 2"""
+    return PageFactory(driver, base_url=base_url, driver_name="default", target_version="v2")
+
+
+@pytest.fixture
+def multi_page_factory_v1(multi_driver, base_url, request):
+    """Фикстура для мульти-фабрики страниц версии 1"""
+    browser_type = request.config.getoption("--browser-type", default="chrome")
+    headless = request.config.getoption("--headless-mode", default=False)
+    return MultiPageFactory(
+        multi_driver,
+        default_browser_type=browser_type,
+        default_headless=headless,
+        default_base_url=base_url,
+        default_target_version="v1"
+    )
+
+
+@pytest.fixture
+def multi_page_factory_v2(multi_driver, base_url, request):
+    """Фикстура для мульти-фабрики страниц версии 2"""
+    browser_type = request.config.getoption("--browser-type", default="chrome")
+    headless = request.config.getoption("--headless-mode", default=False)
+    return MultiPageFactory(
+        multi_driver,
+        default_browser_type=browser_type,
+        default_headless=headless,
+        default_base_url=base_url,
+        default_target_version="v2"
     )
 
 

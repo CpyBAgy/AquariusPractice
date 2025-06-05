@@ -1,9 +1,12 @@
+"""
+Компоненты Amazon версии 1 - базовая реализация
+"""
 from selenium.webdriver.common.by import By
 
 from page_object_library import ElementGroup, auto_log, Input, Button, BaseElement, Link
 
 
-class SearchSuggestionComponent(ElementGroup):
+class SearchSuggestionComponentV1(ElementGroup):
     """Компонент выпадающих подсказок при поиске"""
 
     def __init__(self, page):
@@ -18,12 +21,12 @@ class SearchSuggestionComponent(ElementGroup):
         """Выбирает подсказку поиска по индексу"""
         if len(self.suggestion_list) > index:
             self.suggestion_list[index].click()
-            from examples.amazon.pages import AmazonSearchResultsPage
+            from examples.amazon.v1.pages_v1 import AmazonSearchResultsPage
             return self.page.navigate_to(AmazonSearchResultsPage)
         raise ValueError(f"Подсказка с индексом {index} не найдена")
 
 
-class HeaderComponent(ElementGroup):
+class HeaderComponentV1(ElementGroup):
     """Компонент верхнего меню Amazon"""
 
     def __init__(self, page):
@@ -43,14 +46,14 @@ class HeaderComponent(ElementGroup):
         """Выполняет поиск товара"""
         self.search_input.type(search_text)
         self.search_button.click()
-        from examples.amazon.pages import AmazonSearchResultsPage
+        from examples.amazon.v1.pages_v1 import AmazonSearchResultsPage
         return self.page.navigate_to(AmazonSearchResultsPage)
 
     @auto_log
     def go_to_cart(self):
         """Переходит в корзину"""
         self.cart_icon.click()
-        from examples.amazon.pages import AmazonCartPage
+        from examples.amazon.v1.pages_v1 import AmazonCartPage
         return self.page.navigate_to(AmazonCartPage)
 
     @auto_log
@@ -60,7 +63,7 @@ class HeaderComponent(ElementGroup):
         return self
 
 
-class CartItemComponent(ElementGroup):
+class CartItemComponentV1(ElementGroup):
     """Компонент элемента корзины"""
 
     def __init__(self, page, item_element):
@@ -122,7 +125,7 @@ class CartItemComponent(ElementGroup):
         return price_element.get_text().strip()
 
 
-class ProductDetailsComponent(ElementGroup):
+class ProductDetailsComponentV1(ElementGroup):
     """Компонент деталей товара"""
 
     def __init__(self, page):
@@ -205,6 +208,6 @@ class ProductDetailsComponent(ElementGroup):
         self.page.wait_for_page_loaded()
 
         if "cart" in self.page.driver.current_url:
-            from examples.amazon.pages import AmazonCartPage
+            from examples.amazon.v1.pages_v1 import AmazonCartPage
             return self.page.navigate_to(AmazonCartPage)
         return self.page

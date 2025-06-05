@@ -1,11 +1,11 @@
 import logging
 import pytest
-from examples.amazon.pages import (
-    AmazonLoginPage,
-    AmazonHomePage,
-    AmazonSearchResultsPage,
-    AmazonProductPage,
-    AmazonCartPage
+from examples.amazon.v1.pages_v1 import (
+    AmazonLoginPageV1,
+    AmazonHomePageV1,
+    AmazonSearchResultsPageV1,
+    AmazonProductPageV1,
+    AmazonCartPageV1
 )
 
 
@@ -20,7 +20,7 @@ def test_search_add_to_cart_checkout(page_factory):
     """
     logging.info("=== Начало теста с добавлением элемента в корзину и проверкой стоимости ===")
 
-    login_page = page_factory.create_page(AmazonLoginPage)
+    login_page = page_factory.create_page(AmazonLoginPageV1, version=None)
     login_page.open()
     home_page = login_page.login("vancous220@gmail.com", "MyStrongPassword")
 
