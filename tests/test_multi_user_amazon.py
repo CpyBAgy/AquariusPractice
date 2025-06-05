@@ -1,5 +1,5 @@
 import logging
-from examples.amazon.pages import AmazonLoginPage
+from examples.amazon.v1.pages_v1 import AmazonLoginPageV1
 
 
 def test_two_users_parallel_shopping(multi_page_factory):
@@ -12,21 +12,22 @@ def test_two_users_parallel_shopping(multi_page_factory):
     logging.info("=== Начало улучшенного теста с двумя пользователями ===")
 
     logging.info(">>> Пользователь 1: создаем страницу логина")
-    login_page_user1 = multi_page_factory.create_page(AmazonLoginPage, "default")
+    login_page_user1 = multi_page_factory.create_page(AmazonLoginPageV1, "default", version=None)
     login_page_user1.open()
     home_page_user1 = login_page_user1.login("vancous220@gmail.com", "MyStrongPassword")
 
     logging.info(">>> Пользователь 2: создаем страницу логина")
-    login_page_user2 = multi_page_factory.create_page(AmazonLoginPage, "user2")
+    login_page_user2 = multi_page_factory.create_page(AmazonLoginPageV1, "user2", version=None)
     login_page_user2.open()
-    home_page_user2 = login_page_user2.login("test_user2@example.com", "Password123")
+    home_page_user2 = login_page_user2.login("test_user2@example.com", "Password123", version=None)
 
     logging.info(">>> Пользователь 3: создаем страницу логина в Firefox")
     login_page_user3 = multi_page_factory.create_page(
-        AmazonLoginPage,
+        AmazonLoginPageV1,
         driver_name="user3_firefox",
         browser_type="firefox",
-        headless=True
+        headless=True,
+        version=None
     )
     login_page_user3.open()
 
