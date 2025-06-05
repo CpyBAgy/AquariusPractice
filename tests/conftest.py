@@ -23,7 +23,7 @@ def pytest_addoption(parser):
         help="Базовый URL для тестирования"
     )
     parser.addoption(
-        "--target-version", action="store", default="v2",
+        "--target-version", action="store", default=None,
         help="Целевая версия страниц для тестирования: v1, v2"
     )
 

@@ -30,6 +30,7 @@ class PageFactory:
     def create_page(self, page_class: Type[T], use_cache=True, base_url=None, version=None) -> T:
         """
         Создает экземпляр страницы
+        Приоритет: version > target_version > page_class
 
         Args:
             page_class: Класс страницы для создания
